@@ -1,0 +1,217 @@
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+table {
+	border-collapse: collapse;
+	font-family: Arial, Helvetica, sans-serif;
+	width: 100%;
+}
+table, th, td {
+	border: none;
+	padding: 0;
+}
+p {
+	margin: 0;
+	font-size: 15px;
+}
+.align-center {
+	text-align: center;
+}
+.align-right {
+	text-align: right;
+}
+.pdf-content {
+	padding-right: 15px;
+}
+.blue-head, .blue-subhead {
+	color: #2297d3;
+	margin: 0;
+}
+.heading-row-second {
+	margin-bottom: 20px;
+}
+.blue-bold {
+	color: #2297d3;
+	font-weight: bold;
+	margin: 0;
+}
+.radio-label, .radio-label p, .no-margin p {
+	margin: 0;
+}
+.right-of-application-wrapper .radio-table {
+	margin-top: 2px;
+}
+.document_title {
+	margin-top: 30px;
+}
+.header_center {
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+}
+.header_left .bus_text_left {
+	margin-left:20px;
+}
+
+.header_right .bus_text_right {
+	margin-right: 20px;
+}
+.footer_left {
+	width: 100%;
+	text-align: left;
+	font-size: .80em;
+}
+.footer_right {
+	width: 100%;
+	text-align: right;
+	font-size: .80em;
+}
+.footer_center {
+	width: 100%;
+	text-align: center;
+	font-size: .80em;
+}
+.business_text {
+	font-size: .80em;
+}
+.bus_text_left {
+	float: left;
+	text-align: left;
+}
+.bus_text_right {
+	float: right;
+	text-align: right;
+}
+.img_left {
+	float: left;
+	width: 25%;
+}
+.img_right {
+	float: right;
+	width: 25%;
+}
+.img_center {
+	margin-bottom: 5px;
+	width: 25%;
+	margin-left: auto;
+	margin-right: auto;
+}
+.company_name {
+	font-weight: bold;
+	font-size: 1.10em;
+}
+.clear {
+	clear: both;
+}
+.pdf-row {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+}
+.custom-pdf-wrapper {
+	border-collapse: separate;
+    border-spacing: 15px 6px;
+}
+.pdf-left, .pdf-right {
+	width: 50% ;
+	padding: 5px;
+	border: 1px solid #000;
+}
+.boat-diagram .pdf-left,
+.application-row .pdf-right {
+	border: none;
+	padding: 0;
+}
+.boat-diagram .pdf-right {
+	border: none;
+}
+.boat-diagram .pdf-right td {
+	text-align: center;
+}
+.left-of-diagram-wrapper,
+.right-of-application-wrapper {
+	border-collapse: separate;
+	border-spacing: 0px 6px;
+    margin-top: -6px;
+    margin-bottom: -6px;
+}
+.border-col {
+	border: 1px solid #000;
+}
+.left-of-diagram-wrapper .border-col,
+.right-of-application-wrapper .border-col {
+	border: 1px solid #000;
+	padding: 5px;
+}
+.pdf-label {
+	width: 120px;
+}
+em {
+	font-size: 13px;
+}
+.pdf-label.required p {
+	color: #e30101;
+}
+.left-of-diagram-wrapper .pdf-label {
+	width: 350px
+}
+.custom-pdf-wrapper img {
+	max-width: 100%;
+}
+.one-fourth {
+	width: 25%;
+}
+.one-half {
+	width: 50%;
+}
+.wide-label {
+	width: 140px;
+}
+.wider-label {
+	width: 250px;
+}
+.widest-label {
+	width: 350px;
+}
+.radio-item {
+	width: 30px;
+}
+.radio-label {
+	padding: 3px 0;
+}
+.final-row .pdf-left, .final-row .pdf-right {
+	border: none;
+}
+.date-label {
+	padding-right: 10px;
+}
+.date-field {
+	border-bottom: 2px solid #000;
+	padding-right: 15px;
+}
+@media print {
+	@page {
+		size: 8.5in 11in;  
+		margin: 0.05in 0.15in 0in 0.2in !important;
+	}
+	.custom-pdf-wrapper {
+		page-break-inside: avoid;
+	}
+	.pdf-left, .pdf-right {
+		padding: 0 5px 10px;
+	}
+	.left-of-diagram-wrapper, .right-of-application-wrapper {
+		margin-top: -10px;
+		margin-bottom: 0;
+	}
+	.vessel-row .inner-row {
+		margin: -5px 0 5px;
+	}
+	.heading-row-second .one-half {
+		padding-left: 20px;
+	}
+	.vessel-row .one-half {
+		padding-right: 35px;
+	}
+}
