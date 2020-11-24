@@ -87,6 +87,10 @@ class GM_WooCommerce {
         // add_filter( 'woocommerce_variation_price_html', array($this, 'gm_hide_price'), 10, 2 );
         // add_filter( 'woocommerce_variation_sale_price_html', array($this, 'gm_hide_price'), 10, 2 );
 
+        // Show a "from" price for variable products in the shop   
+        // add_filter( 'woocommerce_variable_sale_price_html', array($this, 'gm_show_from_price'), 10, 2 );
+        add_filter( 'woocommerce_variable_price_html', array($this, 'gm_show_from_price'), 10, 2 );
+
         // Force the quantity buttons to always show
         add_filter( 'woocommerce_quantity_input_args', array($this, 'gm_force_quantity_buttons_to_show'), 20, 2 );        
 
@@ -589,7 +593,7 @@ class GM_WooCommerce {
         if(function_exists('get_field')) { 
             $hide_add_to_cart_button_setting = get_field('hide_add_to_cart_button', $product->get_id());
             if($hide_add_to_cart_button_setting || $product->get_stock_status() == 'onbackorder'){
-                $add_to_cart_html = '<span class="add-to-cart-button-outer"><span class="add-to-cart-button-inner"><a href="' . get_permalink( $product->get_id() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button qbutton add-to-cart-button" data-product_id="'. $product->get_id() . '" aria-label="View &ldquo;' . $product->get_title() . '&rdquo; Now" rel="nofollow">Buy Now</a></span></span>';
+                $add_to_cart_html = '<span class="add-to-cart-button-outer"><span class="add-to-cart-button-inner"><a href="' . get_permalink( $product->get_id() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button qbutton add-to-cart-button no-cart-icon" data-product_id="'. $product->get_id() . '" aria-label="View &ldquo;' . $product->get_title() . '&rdquo; Now" rel="nofollow">View Item</a></span></span>';
                 return $add_to_cart_html;
             }
         }
@@ -635,12 +639,30 @@ class GM_WooCommerce {
         }
         
         if($product->get_stock_status() == 'onbackorder') {
-            return '<div class="hide-price"></div>';
+            return '<div class="hide-price">&nbsp;</div>';
         }
 
         return $price_html;
     }
-
+    /** 
+     * Show variable prices as "From xyz" on shop pages
+     */
+    public function gm_show_from_price( $price, $product ) {
+          
+        $min_var_reg_price = $product->get_variation_regular_price( 'min', true );
+        $min_var_sale_price = $product->get_variation_sale_price( 'min', true );
+        $max_var_reg_price = $product->get_variation_regular_price( 'max', true );
+        $max_var_sale_price = $product->get_variation_sale_price( 'max', true );
+                  
+        if ( ! ( $min_var_reg_price == $max_var_reg_price && $min_var_sale_price == $max_var_sale_price ) ) {   
+           if ( $min_var_sale_price < $min_var_reg_price ) {
+              $price = sprintf( __( 'From <del>%1$s</del><ins>%2$s</ins>', 'woocommerce' ), wc_price( $min_var_reg_price ), wc_price( $min_var_sale_price ) );
+           } else {
+              $price = sprintf( __( 'From %1$s', 'woocommerce' ), wc_price( $min_var_reg_price ) );
+           }
+        }
+        return $price;
+    }
     /**
      * Add simple CSS to the footer to hide the variation price that's shown
      * when a selection is made

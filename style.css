@@ -4,7 +4,7 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.3.2
+Version: 2.3.3a
 Revised: 2020-11-20
 Template: bridge
 */
@@ -126,13 +126,15 @@ header.centered_logo .header_inner_right{
 }
 .woocommerce ul.products li.product .gm-shop-button-wrapper .add-to-cart-button, 
 .woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote,
-.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button {
+.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button,
+.woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward {
     flex: 1 1 50%;
  }
 .woocommerce ul.products li.product .gm-shop-button-wrapper .add-to-cart-button,
 .woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote .add-request-quote-button.button,
 .woocommerce .gm-shop-button-wrapper .yith_ywraq_add_item_browse_message a,
-.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button {
+.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button,
+.woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward {
     padding: 0;
     margin: 0;
     height: 40px;
@@ -143,14 +145,15 @@ header.centered_logo .header_inner_right{
 .woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote .add-request-quote-button.button,
 .woocommerce .gm-shop-button-wrapper .yith_ywraq_add_item_browse_message a,
 .woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button {
-    border: 2px solid #e2ad68;
-    color: #e2ad68 !important;
+    border: 2px solid #e28306;
+    color: #e28306 !important;
     background-color: #FFF !important;
     line-height: 36px;
 }
 .woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote .add-request-quote-button.button:hover,
 .woocommerce .gm-shop-button-wrapper .yith_ywraq_add_item_browse_message a:hover,
-.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button:hover {
+.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button:hover,
+.woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward:hover {
     border-color:#000;
     color: #fff !important;
     background-color: #000 !important;
@@ -158,13 +161,25 @@ header.centered_logo .header_inner_right{
 .woocommerce ul.products .gm-shop-button-wrapper .ywraq-loader {
     display: none;
 }
-.woocommerce ul.products li.product  .gm-shop-button-wrapper .add-to-cart-button:before {
-    content: "\e015";
+.woocommerce ul.products li.product .gm-shop-button-wrapper .add-to-cart-button,
+.woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward {
+    background-color: #e28306;
+}
+.woocommerce ul.products li.product  .gm-shop-button-wrapper .add-to-cart-button:before, 
+.woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward:before {
+    content: "\e013";
     font-family: ElegantIcons;
-    font-size: 28px;
+    font-size: 23px;
     margin-right: 5px;
     vertical-align: top;
     line-height: 36px;
+    font-weight: 400;
+}
+.woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward:before {
+    content: "\e015";
+}
+.woocommerce ul.products li.product  .gm-shop-button-wrapper .add-to-cart-button.no-cart-icon:before {
+    display: none;
 }
 .woocommerce ul.products .gm-shop-button-wrapper .product-category.product-info {
     display: none;
@@ -193,7 +208,7 @@ header.centered_logo .header_inner_right{
     -webkit-animation: none;
     -moz-animation: none;
     animation: none;
-    background-image: url(images/spinning-circle.svg);
+    background-image: url(images/spinning-circle-tp.svg);
     background-size: contain;
     background-position: center right;
     line-height: 1;
@@ -782,7 +797,7 @@ span.woocommerce-Price-amount.amount:nth-last-child(2) span.currency-suffix {
     -webkit-animation: none;
     -moz-animation: none;
     animation: none;
-    background: url('images/spinning-circle.svg') center center;
+    background: url('images/spinning-circle-tp.svg') center center;
     background-size: cover;
     line-height: 1;
     text-align: center;
