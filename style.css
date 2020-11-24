@@ -4,8 +4,8 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.3.1
-Revised: 2020-11-13
+Version: 2.3.2
+Revised: 2020-11-20
 Template: bridge
 */
 @import url("../bridge/style.css");
@@ -118,11 +118,62 @@ header.centered_logo .header_inner_right{
     color: #585858;
 }
 /* WooCoommerce Shop & Cateogry Pages (and sometimes related products) */
+.woocommerce ul.products .gm-shop-button-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+.woocommerce ul.products li.product .gm-shop-button-wrapper .add-to-cart-button, 
+.woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote,
+.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button {
+    flex: 1 1 50%;
+ }
+.woocommerce ul.products li.product .gm-shop-button-wrapper .add-to-cart-button,
+.woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote .add-request-quote-button.button,
+.woocommerce .gm-shop-button-wrapper .yith_ywraq_add_item_browse_message a,
+.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button {
+    padding: 0;
+    margin: 0;
+    height: 40px;
+    line-height: 40px;
+    letter-spacing: 0;
+    font-size: 12px;
+}
+.woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote .add-request-quote-button.button,
+.woocommerce .gm-shop-button-wrapper .yith_ywraq_add_item_browse_message a,
+.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button {
+    border: 2px solid #e2ad68;
+    color: #e2ad68 !important;
+    background-color: #FFF !important;
+    line-height: 36px;
+}
+.woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote .add-request-quote-button.button:hover,
+.woocommerce .gm-shop-button-wrapper .yith_ywraq_add_item_browse_message a:hover,
+.woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button:hover {
+    border-color:#000;
+    color: #fff !important;
+    background-color: #000 !important;
+}
+.woocommerce ul.products .gm-shop-button-wrapper .ywraq-loader {
+    display: none;
+}
+.woocommerce ul.products li.product  .gm-shop-button-wrapper .add-to-cart-button:before {
+    content: "\e015";
+    font-family: ElegantIcons;
+    font-size: 28px;
+    margin-right: 5px;
+    vertical-align: top;
+    line-height: 36px;
+}
+.woocommerce ul.products .gm-shop-button-wrapper .product-category.product-info {
+    display: none;
+}
 .woocommerce ul.products li.product .add-to-cart-button,
 .woocommerce ul.products li.product .added_to_cart.wc-forward {
     display: block;
     margin-left: 0;
-    margin-top: 24px;
+    /* margin-top: 24px; */
     opacity: 1;
     visibility: visible;
     text-align: center;
@@ -170,6 +221,7 @@ header.centered_logo .header_inner_right{
 .woocommerce ul.products li.product .yith-ywraq-add-to-quote {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 .woocommerce ul.products li.product .yith_ywraq_add_item_browse_message.gm-continue-shopping,
 .related.products .yith_ywraq_add_item_browse_message.gm-continue-shopping {
@@ -177,14 +229,43 @@ header.centered_logo .header_inner_right{
 }
 .woocommerce ul.products li.product .yith_ywraq_add_item_browse_message.show,
 .related.products .yith_ywraq_add_item_browse_message.show {
-    order: 1;
+    /* order: 1; */
+    z-index: 99999;
 }
+/*.related.products .woocommerce ul.products li.product,*/
 .woocommerce ul.products li.product .yith_ywraq_add_item_product_message,
 .woocommerce ul.products li.product .yith_ywraq_add_item_response_message,
-.related.products .woocommerce ul.products li.product,
 .related.products .yith_ywraq_add_item_product_message {
-    order: 2;
-    margin-top: 16px;
+    /* order: 2; */
+    /* margin-top: 16px; */
+    position: absolute;
+    background: #fff;
+    z-index: 9999;
+    /* border-radius: 10px; */
+    padding: 4px 10px;
+    box-shadow: -1px 0px 14px 3px rgb(0 0 0 / 13%);
+    left: -100%;
+    right: 0;
+    /* top: -50px; */
+    top: 50px;
+}
+
+.woocommerce ul.products li.product .yith_ywraq_add_item_product_message:after,
+.woocommerce ul.products li.product .yith_ywraq_add_item_response_message:after,
+.related.products .yith_ywraq_add_item_product_message:after {
+    content: " ";
+    position: absolute;
+    /* bottom: -10px; */
+    /* border-top: 10px solid #fff; */
+    /* border-right: 10px solid transparent; */
+    /* border-left: 10px solid transparent; */
+    /* border-bottom: none; */
+    top: -10px;
+    border-top: none;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-bottom: 10px solid #fff;
+    right: 5%;
 }
 /* WooCommerce Products */
 .shop-custom-product-image-col .vc_column-inner {
@@ -712,6 +793,10 @@ span.woocommerce-Price-amount.amount:nth-last-child(2) span.currency-suffix {
 .woocommerce .blockUI.blockOverlay:before {
     position:fixed!important
 }
+/* Hide spinner on single product page */
+.woocommerce.single-product .blockUI.blockOverlay:before,.woocommerce.single-product .loader:before {
+    display: none;
+} 
 /* YITH Request a Quote Premium */
 .woocommerce .add-request-quote-button.disabled {
     opacity: 1 !important;
@@ -1444,6 +1529,11 @@ form.searchandfilter li[data-sf-field-type="taxonomy"] ul li .sf-label-checkbox:
         line-height: 1.2em;
         padding-top:  10px;
         padding-bottom: 10px;
+    }
+    .woocommerce ul.products li.product .yith_ywraq_add_item_product_message,
+    .woocommerce ul.products li.product .yith_ywraq_add_item_response_message,
+    .related.products .yith_ywraq_add_item_product_message {
+        left: 0;
     }
 }
 

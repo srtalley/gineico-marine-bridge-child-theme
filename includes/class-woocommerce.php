@@ -6,6 +6,7 @@ class GM_WooCommerce {
 
   
     public function __construct() {
+
         // add_filter('wclt_disable_default_output', '__return_true');
         add_filter('loop_shop_per_page', array($this, 'gm_show_all_products_in_shop'), 100);
 
@@ -368,8 +369,28 @@ class GM_WooCommerce {
      */
     public function gm_move_bridge_woocommerce_add_to_cart_buttons() {
         remove_action( 'bridge_qode_action_woocommerce_after_product_image', 'woocommerce_template_loop_add_to_cart', 10 );
+        add_action( 'woocommerce_after_shop_loop_item_title', array($this, 'gm_add_shop_button_wrapper_start'), 20 );
         add_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_add_to_cart', 20 );
-        add_action( 'woocommerce_after_shop_loop_item_title', array($this, 'gm_show_add_to_quote_on_category_pages'), 30 );
+        add_action( 'woocommerce_after_shop_loop_item', array($this, 'gm_show_add_to_quote_on_category_pages'), 15 );
+        add_action( 'woocommerce_after_shop_loop_item', array($this, 'gm_add_shop_button_wrapper_end'), 16 );
+
+    }
+    public function gm_add_shop_button_wrapper_start() {
+        echo '<div class="gm-shop-button-wrapper">';
+        add_filter( 'ywraq_get_label', array($this, 'gm_change_shop_browse_list_text'), 10, 2);
+
+    }
+    public function gm_add_shop_button_wrapper_end() {
+        echo '</div>';
+    }
+    public function gm_change_shop_browse_list_text($label, $key) {
+        if($key == 'browse_list') {
+            $label = "View List";
+        }
+        if($key == 'already_in_quote') {
+            $label = 'Already in quote.';
+        }
+        return $label;
     }
     public function gm_show_add_to_quote_on_category_pages() {
         global $product;
@@ -568,10 +589,12 @@ class GM_WooCommerce {
         if(function_exists('get_field')) { 
             $hide_add_to_cart_button_setting = get_field('hide_add_to_cart_button', $product->get_id());
             if($hide_add_to_cart_button_setting || $product->get_stock_status() == 'onbackorder'){
-                $add_to_cart_html = '<span class="add-to-cart-button-outer"><span class="add-to-cart-button-inner"><a href="' . get_permalink( $product->get_id() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button qbutton add-to-cart-button" data-product_id="'. $product->get_id() . '" aria-label="View &ldquo;' . $product->get_title() . '&rdquo; Now" rel="nofollow">View Product</a></span></span>';
+                $add_to_cart_html = '<span class="add-to-cart-button-outer"><span class="add-to-cart-button-inner"><a href="' . get_permalink( $product->get_id() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button qbutton add-to-cart-button" data-product_id="'. $product->get_id() . '" aria-label="View &ldquo;' . $product->get_title() . '&rdquo; Now" rel="nofollow">Buy Now</a></span></span>';
                 return $add_to_cart_html;
             }
         }
+        $add_to_cart_html = str_replace('Select options', 'Buy Now', $add_to_cart_html);
+
         $add_to_cart_html = str_replace('Add to cart', 'Buy Now', $add_to_cart_html);
         return $add_to_cart_html;
     }
