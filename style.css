@@ -4,8 +4,8 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.3.3a
-Revised: 2020-11-20
+Version: 2.3.5
+Revised: 2020-11-24
 Template: bridge
 */
 @import url("../bridge/style.css");
@@ -145,8 +145,8 @@ header.centered_logo .header_inner_right{
 .woocommerce .gm-shop-button-wrapper .yith-ywraq-add-to-quote .add-request-quote-button.button,
 .woocommerce .gm-shop-button-wrapper .yith_ywraq_add_item_browse_message a,
 .woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button {
-    border: 2px solid #e28306;
-    color: #e28306 !important;
+    border: 2px solid #242E49;
+    color: #242E49 !important;
     background-color: #FFF !important;
     line-height: 36px;
 }
@@ -154,15 +154,19 @@ header.centered_logo .header_inner_right{
 .woocommerce .gm-shop-button-wrapper .yith_ywraq_add_item_browse_message a:hover,
 .woocommerce .gm-shop-button-wrapper .add-request-quote-button-variable.button:hover,
 .woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward:hover {
-    border-color:#000;
+    border-color:#e28306;
     color: #fff !important;
-    background-color: #000 !important;
+    background-color: #e28306 !important;
 }
 .woocommerce ul.products .gm-shop-button-wrapper .ywraq-loader {
     display: none;
 }
 .woocommerce ul.products li.product .gm-shop-button-wrapper .add-to-cart-button,
 .woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward {
+    background-color: #242E49;
+}
+.woocommerce ul.products li.product .gm-shop-button-wrapper .add-to-cart-button:hover,
+.woocommerce ul.products li.product .gm-shop-button-wrapper .added_to_cart.wc-forward:hover {
     background-color: #e28306;
 }
 .woocommerce ul.products li.product  .gm-shop-button-wrapper .add-to-cart-button:before, 
@@ -218,10 +222,16 @@ header.centered_logo .header_inner_right{
     background-repeat: no-repeat;
     background-color: rgba(255, 255, 255, 0.3);
 } 
-.woocommerce ul.products li.product h6,
-.woocommerce ul.products li.product .price {
+.woocommerce ul.products li.product h6 {
     font-size: 13px;
     line-height: 18px;
+}
+.woocommerce ul.products li.product .price {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: 'Raleway', sans-serif;
+    color: #242323;
+    font-weight: 600;
 }
 .woocommerce ul.products li.product h6 {
     min-height: 54px;
@@ -339,6 +349,8 @@ header.centered_logo .header_inner_right{
 }
 .variations_form.cart table.variations {
     width: 100%;
+    position: relative;
+    margin-bottom: 5px !important;
 }
 .variations_form.cart table.variations .label {
     padding: 0;
@@ -353,9 +365,39 @@ header.centered_logo .header_inner_right{
     vertical-align: middle;
     padding-right: 0;
 }
-.woocommerce-variation-price {
+.variations_form.cart .woocommerce-variation.single_variation {
+    margin-bottom: 20px;
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-left: 100px;
+}
+.variations_form.cart .woocommerce-variation-description {
+    flex: 1 1 100%;
+    order: 1;
+    text-align: right;
+}
+.variations_form.cart .woocommerce-variation-price {
     font-weight: bold;
+    flex: 0 1 auto;
+    order: 3;
     /* margin-bottom: 15px; */
+}
+.variations_form.cart .woocommerce-variation-price .woocommerce-Price-amount.amount {
+    padding-left: 20px;
+    position: relative;
+}
+.variations_form.cart .woocommerce-variation-price .woocommerce-Price-amount.amount:before {
+    content: ' | ';
+    position: absolute;
+    left: 8px;
+    font-weight: 400;
+}
+.variations_form.cart .woocommerce-variation-availability {
+    flex: 1 1 auto;
+    order: 2;
+    text-align: right;
 }
 .woocommerce div.product .product_meta {
     margin: 0 0 10px;
@@ -416,8 +458,10 @@ header.centered_logo .header_inner_right{
      text-transform: lowercase;
 } */
 a.reset_variations {
-     position: absolute;
-     font-size: 12px;
+    position: absolute;
+    font-size: 12px;
+    right: 5px;
+    top: -25px;
 }
 /* .wclt_lead_time { */
     /* display: block; */
@@ -1816,6 +1860,10 @@ form.searchandfilter li[data-sf-field-type="taxonomy"] ul li .sf-label-checkbox:
 }
 
 @media (max-width: 480px) {
+    .woocommerce ul.products li.product:hover .gm-shop-button-wrapper .add-to-cart-button:not(.added) {
+        display: block;
+        opacity: 1;
+    }
     .shop-custom-product-image-col {
         width: 100%;
     }
@@ -1828,6 +1876,20 @@ form.searchandfilter li[data-sf-field-type="taxonomy"] ul li .sf-label-checkbox:
         display: inline-block;
         padding-left: 0;
         padding-right: 5px;
+    }
+    .variations_form.cart .woocommerce-variation.single_variation{ 
+        display: block !important;
+        padding-left: 0;
+    }
+    .variations_form.cart .woocommerce-variation-description,
+    .variations_form.cart .woocommerce-variation-availability {
+        text-align: left;
+    }
+    .variations_form.cart .woocommerce-variation-price .woocommerce-Price-amount.amount {
+        padding-left: 0;
+    }
+    .variations_form.cart .woocommerce-variation-price .woocommerce-Price-amount.amount:before {
+        display: none;
     }
     .quantity.buttons_added input[type="button"] {
         height: 22px;

@@ -21,6 +21,7 @@ if(!function_exists('bridge_qode_child_theme_enqueue_scripts')) {
 require_once( dirname( __FILE__ ) . '/includes/class-woocommerce.php');
 require_once( dirname( __FILE__ ) . '/includes/class-trade_customer.php');
 require_once( dirname( __FILE__ ) . '/includes/class-woocommerce-account.php');
+require_once( dirname( __FILE__ ) . '/includes/class-woocommerce-shipping.php');
 
 // wl(pw_new_user_approve)
 

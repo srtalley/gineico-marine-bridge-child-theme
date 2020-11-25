@@ -7,7 +7,6 @@ class GM_WooCommerce {
   
     public function __construct() {
 
-        // add_filter('wclt_disable_default_output', '__return_true');
         add_filter('loop_shop_per_page', array($this, 'gm_show_all_products_in_shop'), 100);
 
         add_action( 'woocommerce_before_add_to_cart_form', array($this, 'gm_show_product_catalogue'), 20 );
@@ -48,8 +47,10 @@ class GM_WooCommerce {
         // Change the backorder text in the admin area
         add_filter ('woocommerce_admin_stock_html', array($this, 'gm_woocommerce_admin_stock_html'), 10, 2 );
 
-        // Change backorder text
-        add_filter('woocommerce_get_availability_text', array($this, 'gm_change_available_on_backorder_text'), 10, 2);
+        // Change lead time text
+        add_filter('woocommerce_get_availability_text', array($this, 'gm_change_lead_time_text'), 10, 2);
+        add_filter( 'woocommerce_get_stock_html', array( $this, 'gm_change_lead_time_html' ), 10, 2 );
+
 
         // Add wrappers to shift the position of buttons
         add_action('woocommerce_before_add_to_cart_quantity', array($this, 'gm_woocommerce_before_add_to_cart_quantity'), 1);
@@ -690,20 +691,40 @@ class GM_WooCommerce {
         return $args;
     }
      /**
-     * Change lead time text
+     * Change lead time text 
      */
-    public function gm_change_available_on_backorder_text($availability, $product) {
+    public function gm_change_lead_time_text($availability, $product) {
 
-        $availability_backorder = $this->starts_with($availability, 'Available on backorder');
-        if($availability_backorder) {
+        // Change for in stock products that have a quantity specified
 
-            $availability = str_replace('Available on backorder', '', $availability);
-            $availability = str_replace('class="wclt_lead_time">&nbsp;| ', 'class="wclt_lead_time">', $availability);
+        if($product->managing_stock() && $product->is_in_stock()) {
+            $availability = 'In Stock';    
+        } else {
+            $availability_backorder = $this->starts_with($availability, 'Available on backorder');
+            if($availability_backorder) {
+    
+                $availability = str_replace('Available on backorder', '', $availability);
+                $availability = str_replace('class="wclt_lead_time">&nbsp;| ', 'class="wclt_lead_time">', $availability);
+            }
+            //     // Available on backorder<span style="color: #1c1d20;" class="wclt_lead_time">&nbsp;| LEAD TIME: 8 - 10 weeks
         }
-            // Available on backorder<span style="color: #1c1d20;" class="wclt_lead_time">&nbsp;| LEAD TIME: 8 - 10 weeks
+       
         return $availability;
     }
+    /**
+     * Change the lead time text for in stock products that 
+     * don't have a stock level set.
+     */
+    public function gm_change_lead_time_html($html, $product) {
+        if(!$product->managing_stock() && $product->is_in_stock()) {
+                $html = str_replace(' class="stock wclt_lead_time">LEAD TIME:', ' class="stock wclt_lead_time">In Stock | LEAD TIME:', $html);
+        }
+        return $html;
+    }
 
+    /**
+     * Utility function
+     */
     public function starts_with($string, $startString) { 
         $len = strlen($startString); 
         return (substr($string, 0, $len) === $startString); 
