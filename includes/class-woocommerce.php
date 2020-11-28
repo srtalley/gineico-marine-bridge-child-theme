@@ -48,8 +48,8 @@ class GM_WooCommerce {
         add_filter ('woocommerce_admin_stock_html', array($this, 'gm_woocommerce_admin_stock_html'), 10, 2 );
 
         // Change lead time text
-        add_filter('woocommerce_get_availability_text', array($this, 'gm_change_lead_time_text'), 10, 2);
-        add_filter( 'woocommerce_get_stock_html', array( $this, 'gm_change_lead_time_html' ), 10, 2 );
+        add_filter( 'woocommerce_get_availability_text', array($this, 'gm_change_lead_time_text' ), 10, 2);
+        //add_filter( 'woocommerce_get_stock_html', array( $this, 'gm_change_lead_time_html' ), 10, 2 );
 
 
         // Add wrappers to shift the position of buttons
@@ -697,9 +697,9 @@ class GM_WooCommerce {
 
         // Change for in stock products that have a quantity specified
 
-        if($product->managing_stock() && $product->is_in_stock()) {
-            $availability = 'In Stock';    
-        } else {
+        // if($product->managing_stock() && $product->is_in_stock()) {
+            // $availability = 'In Stock';    
+        // } else {
             $availability_backorder = $this->starts_with($availability, 'Available on backorder');
             if($availability_backorder) {
     
@@ -707,7 +707,7 @@ class GM_WooCommerce {
                 $availability = str_replace('class="wclt_lead_time">&nbsp;| ', 'class="wclt_lead_time">', $availability);
             }
             //     // Available on backorder<span style="color: #1c1d20;" class="wclt_lead_time">&nbsp;| LEAD TIME: 8 - 10 weeks
-        }
+        // }
        
         return $availability;
     }
@@ -715,12 +715,12 @@ class GM_WooCommerce {
      * Change the lead time text for in stock products that 
      * don't have a stock level set.
      */
-    public function gm_change_lead_time_html($html, $product) {
-        if(!$product->managing_stock() && $product->is_in_stock()) {
-                $html = str_replace(' class="stock wclt_lead_time">LEAD TIME:', ' class="stock wclt_lead_time">In Stock | LEAD TIME:', $html);
-        }
-        return $html;
-    }
+    // public function gm_change_lead_time_html($html, $product) {
+    //     if(!$product->managing_stock() && $product->is_in_stock()) {
+    //             $html = str_replace(' class="stock wclt_lead_time">LEAD TIME:', ' class="stock wclt_lead_time">In Stock | LEAD TIME:', $html);
+    //     }
+    //     return $html;
+    // }
 
     /**
      * Utility function

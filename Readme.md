@@ -1,6 +1,10 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
+## [2.3.6] - 2020-11-27
+- Reverted the changes to the lead time text for in stock products.
+
 ## [2.3.5] - 2020-11-25
 - Changes to the lead time text to hide the lead time for in stock products where the stock is being managed.
 - CSS to fix price display for variable products. 
