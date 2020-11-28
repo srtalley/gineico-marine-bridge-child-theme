@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				color: #242e4a;
 			}
 			#template_header {
-				background-color: #cdc5b2;
+				background-color: #CEC6B1;
 			}
 			#header_wrapper {
 				padding: 16px 18px;

@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.7] - 2020-11-27
+- Updated the email header color.
+
 ## [2.3.6] - 2020-11-27
 - Reverted the changes to the lead time text for in stock products.
 
