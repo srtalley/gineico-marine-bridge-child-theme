@@ -136,7 +136,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 														echo '<p style="margin-top:0 !important; margin-bottom: 0 !important;"><a href="' . site_url() . '" target="_blank"><img width="200" height="104" src="' . esc_url( $img ) . '" alt="' . get_bloginfo( 'name', 'display' ) . '" style="width: 200px; margin-top: 10px;" /><a/></p>';
 													}
 													?>
-													<p style="font-size: 14px; font-weight: normal; margin: 0 !important;">Gineico Marine • Italian Marine Accessories</p>
+													<p style="font-size: 14px; font-weight: normal; margin: 0 !important;">Gineico Marine • Italian Marine Accessories</p>
 												</div>
 											</td>
 										</tr>

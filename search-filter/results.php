@@ -28,7 +28,7 @@ if ( $query->have_posts() )
 	
 	Found <?php echo $query->found_posts; ?> Results<br />
 	<div class='woocommerce columns-<?php echo esc_attr( wc_get_loop_prop( 'columns')); ?> search-filter-results-list'>
-	<ul class="products columns-<?php echo esc_attr( wc_get_loop_prop( 'columns' ) ); ?>">
+	<ul id="woocommerce-products-results" class="products columns-<?php echo esc_attr( wc_get_loop_prop( 'columns' ) ); ?>">
 	<?php
 		while ($query->have_posts())
 		{
@@ -40,17 +40,35 @@ if ( $query->have_posts() )
 			<?php
 		} // end while
 	?>
+	
 	</ul>
+
+
 	<hr />
 	</div> <!-- .search-filter-results-list -->
 <?php
-}
-else
-{
-	?>
+} else {
+
+	//figure out which type of "no results" message to show
+	$message = "noresults"; 
+	if(isset($query->query['paged'])) {  
+	 if($query->query['paged']>1){
+	  $message = "endofresults";
+	 }
+	}
+	
+	   if($message=="noresults") {
+	   ?>
 	<div class='search-filter-results-list' data-search-filter-action='infinite-scroll-end'>
-		<span>End of Results</span>
+	<span class="results-end">No Results Found</span>
 	</div>
 	<?php
-}
-?>
+	   } else {
+	?>
+	<div class='search-filter-results-list' data-search-filter-action='infinite-scroll-end'>
+	<span class="results-end">End of Results</span>
+	</div>
+	<?php
+	}
+   }
+   ?>

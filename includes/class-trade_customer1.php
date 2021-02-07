@@ -47,10 +47,6 @@ class GM_TradeCustomer {
         // remove the HTML content type from the email after it's sent
         add_action( 'new_user_approve_approve_user', array($this, 'remove_html_content_type'), 1000, 1 );
 
-        // Registration date columns
-        add_filter( 'manage_users_columns', array($this, 'gm_modify_user_table') );
-        add_filter( 'manage_users_custom_column', array($this, 'gm_modify_user_table_row'), 10, 3 );
-        add_filter( 'manage_users_sortable_columns', array($this, 'gm_make_registered_column_sortable') );
     }
     
     /**
@@ -569,7 +565,7 @@ class GM_TradeCustomer {
      * Set the email addresses that the trade customer approvals should go to
      */
     public function gm_trade_customer_approval_email_addresses($emails) {
-        $emails = array(get_option("admin_email"),'pg@gineico.com');
+        $emails = array(get_option("admin_email"));
         return $emails;
     }
 
@@ -607,7 +603,7 @@ class GM_TradeCustomer {
         $new_message .= '<p>{username}</p>';
         $new_message .= '<p>Set your password at this link: <br />';
         $new_message .= '<strong><a href="' . site_url() . '/my-account/lost-password/' .'" target="_blank" style="color: #242e4a">' . site_url() . '/my-account/lost-password/</a></strong></p>';
-        $new_message .= '<p>In the future, once your password is set you can simply log into your account at <strong><a href="' . site_url() . '/my-account" target="_blank" style="color: #242e4a">' . site_url() . '/my-account</a></strong> then use the website menu tab <strong>TRADE ONLY DOWNLOADS</strong> that sits under the <strong>CONTACT</strong> tab in the main menu</p>';
+        $new_message .= '<p>In the future, once your password is set can you can simply log in to your account at <strong><a href="' . site_url() . '/my-account" target="_blank" style="color: #242e4a">' . site_url() . '/my-account</a></strong> or use the menu tab <strong>Trade Only Downloads</strong> that can also be found under the <strong>Gianneschi Pumps</strong> main menu tab.</p>';
         ob_start();
         include dirname(THEME_FUNCTIONS__FILE__) . '/woocommerce/emails/email-footer.php';
         $new_message .= ob_get_contents();
@@ -641,53 +637,7 @@ class GM_TradeCustomer {
         // $message .= "Downloader's IP: ". $_SERVER['REMOTE_ADDR'];
         wp_mail(get_option("admin_email"), $subject, $message, $headers); 
     } 
-
-    /*
-    * Create a column. And maybe remove some of the default ones
-    * @param array $columns Array of all user table columns {column ID} => {column Name} 
-    */
-
-
-    public function gm_modify_user_table( $columns ) {
     
-        // unset( $columns['posts'] ); // maybe you would like to remove default columns
-        $columns['registration_date'] = 'Registration date'; // add new
-    
-        return $columns;
-    
-    }
-    
-    /*
-    * Fill our new column with the registration dates of the users
-    * @param string $row_output text/HTML output of a table cell
-    * @param string $column_id_attr column ID
-    * @param int $user user ID (in fact - table row ID)
-    */
-
-    public function gm_modify_user_table_row( $row_output, $column_id_attr, $user ) {
-    
-        $date_format = 'j M, Y H:i';
-    
-        switch ( $column_id_attr ) {
-            case 'registration_date' :
-                return date( $date_format, strtotime( get_the_author_meta( 'registered', $user ) ) );
-                break;
-            default:
-        }
-    
-        return $row_output;
-    
-    }
-    
-    /*
-    * Make our "Registration date" column sortable
-    * @param array $columns Array of all user sortable columns {column ID} => {orderby GET-param} 
-    */
-    
-    public function gm_make_registered_column_sortable( $columns ) {
-        return wp_parse_args( array( 'registration_date' => 'registered' ), $columns );
-    }
-        
 
 } // end class GM_TradeCustomer
 $gm_tradecustomer = new GM_TradeCustomer();

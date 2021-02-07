@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.4] - 2020-02-07
+* Updates to the Trade Customer emails.
+
+## [2.3.8] - 2020-11-30
+* Updated search filter to properly show "end of results" and updated the loading animation.
+
 ## [2.3.7] - 2020-11-27
 - Updated the email header color.
 

@@ -7,9 +7,17 @@ class GM_WooCommerce {
   
     public function __construct() {
 
+        // Message above the add to cart button - comment to hide.
+        // add_action( 'woocommerce_checkout_terms_and_conditions', array($this, 'gm_show_message_before_terms'), 21 );
+
+        // Message at the top of the order receipt - comment to hide.
+        // add_action( 'woocommerce_before_thankyou', array($this, 'gm_show_message_above_order_receipt'), 20 );
+
+        // Message at the top of the order email - comment to hide.
+        // add_action( 'woocommerce_email_order_details', array($this, 'gm_show_message_email_above_order_details'), 1 );
+
         add_filter('loop_shop_per_page', array($this, 'gm_show_all_products_in_shop'), 100);
 
-        add_action( 'woocommerce_before_add_to_cart_form', array($this, 'gm_show_product_catalogue'), 20 );
 
         add_action( 'woocommerce_single_product_summary', array($this,'gm_after_add_to_cart_download_pdf'),39 );
 
@@ -123,6 +131,9 @@ class GM_WooCommerce {
         // PDF file name
         add_filter( 'ywraq_pdf_file_name', array($this, 'gm_ywraq_pdf_file_name'), 10, 2 );
         
+        // PDF file url
+        add_filter('ywraq_pdf_file_url', array($this, 'gm_ywraq_pdf_url_string'), 10, 1);
+
         // PDF paper orientation
         add_filter('ywraq_change_paper_orientation' , array($this, 'gm_ywraq_change_paper_orientation'));
 
@@ -145,6 +156,31 @@ class GM_WooCommerce {
 
     } // end function construct
 
+    /** 
+     * Add a message above the add to cart button on the product pages
+     */
+    // public function gm_show_message_before_terms() {
+    //     echo '<div class="product-message-above-add-to-cart" style="margin: 10px 0;">';
+    //     echo '<p style="font-style: oblique; color: #ea0404;">Please note we are closed for the Christmas / New Year period from the 18th December 2020 till 11th January 2021 any orders placed in this time will be addressed in the week starting the 11th January 2021.</p>';
+    //     echo '</div>';
+    // }
+    /** 
+     * Add a message above the order receipt
+     */
+    // public function gm_show_message_above_order_receipt() {
+    //     echo '<div class="checkout-message-above-receipt" style="margin-bottom: 20px;">';
+    //     echo '<p style="font-style: oblique; color: #ea0404;">Please note any orders placed in our Christmas / New Year holiday period from the 18th December 2020 till 11th January 2021 will be addressed in the week starting the 11th January 2021.</p>';
+    //     echo '</div>';
+    // }
+    /** 
+     * Add a message above order details in the email
+     */
+    // public function gm_show_message_email_above_order_details() {
+    //     echo '<div class="email-message-above-order-details" style="margin-bottom: 20px;">';
+    //     echo '<p style="font-style: oblique; color: #ea0404;">If you have placed this order in our Christmas / New Year holiday period from the 18th December 2020 till 11th January 2021, these orders will be addressed in the week starting the 11th January 2021.</p>';
+    //     echo '</div>';
+    // }
+    
     /**
      * Remove the price from shop pages 
      */
@@ -574,7 +610,8 @@ class GM_WooCommerce {
      */
     public function gm_hide_add_to_cart_button() {
         global $product;
-        if($product->get_price() == 0 || $product->get_price() == '' || $product->get_stock_status() == 'onbackorder') {
+        if($product->get_price() == 0 || $product->get_price() == '') {
+        //if($product->get_price() == 0 || $product->get_price() == '' || $product->get_stock_status() == 'onbackorder') {
             echo '<div class="remove-buttons"></div>';
         } else if(function_exists('get_field')) { 
             $hide_add_to_cart_button_setting = get_field('hide_add_to_cart_button', $product->get_id());
@@ -593,7 +630,8 @@ class GM_WooCommerce {
 
         if(function_exists('get_field')) { 
             $hide_add_to_cart_button_setting = get_field('hide_add_to_cart_button', $product->get_id());
-            if($hide_add_to_cart_button_setting || $product->get_stock_status() == 'onbackorder'){
+            if($hide_add_to_cart_button_setting){
+            // if($hide_add_to_cart_button_setting || $product->get_stock_status() == 'onbackorder'){
                 $add_to_cart_html = '<span class="add-to-cart-button-outer"><span class="add-to-cart-button-inner"><a href="' . get_permalink( $product->get_id() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button qbutton add-to-cart-button no-cart-icon" data-product_id="'. $product->get_id() . '" aria-label="View &ldquo;' . $product->get_title() . '&rdquo; Now" rel="nofollow">View Item</a></span></span>';
                 return $add_to_cart_html;
             }
@@ -639,9 +677,9 @@ class GM_WooCommerce {
             } 
         }
         
-        if($product->get_stock_status() == 'onbackorder') {
-            return '<div class="hide-price">&nbsp;</div>';
-        }
+        // if($product->get_stock_status() == 'onbackorder') {
+        //     return '<div class="hide-price">&nbsp;</div>';
+        // }
 
         return $price_html;
     }
@@ -764,7 +802,7 @@ class GM_WooCommerce {
     }
 
     /**
-     * Change the PDF file name
+     * Change the Yith PDF file name
      */
     public function gm_ywraq_pdf_file_name($pdf_file_name, $order_id) {
         $order = wc_get_order($order_id);
@@ -787,6 +825,21 @@ class GM_WooCommerce {
         return $pdf_file_name;
     }
 
+    /** 
+     * Add a random string to the end of the URL to break the cache so that the 
+     * proper PDF downloads.
+     */
+    public function gm_ywraq_pdf_url_string($url) {
+
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyz'; 
+        $randomString = ''; 
+    
+        for ($i = 0; $i < 6; $i++) { 
+            $index = rand(0, strlen($characters) - 1); 
+            $random_string .= $characters[$index]; 
+        } 
+        return $url . '?ver=' .$random_string;
+    }
     /** 
      * Change the PDF paper orientation
      */
