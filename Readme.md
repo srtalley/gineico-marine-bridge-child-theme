@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.5] - 2020-02-18
+* Added code to hide reCAPTCHA v3.
+
 ## [2.4.4] - 2020-02-07
 * Updates to the Trade Customer emails.
 
