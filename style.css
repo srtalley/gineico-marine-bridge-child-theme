@@ -4,8 +4,8 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.4.5
-Revised: 2021-02-18
+Version: 2.4.6
+Revised: 2021-04-24
 Template: bridge
 */
 
@@ -473,7 +473,7 @@ input.wpcf7-form-control.wpcf7-submit:not([disabled]),
 
 .woocommerce-product-banner.instock {
     width: 150px;
-    background: #e43;
+    background: #7AC5C8;
     position: absolute;
     text-align: center;
     line-height: 30px;

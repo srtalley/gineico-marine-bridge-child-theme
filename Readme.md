@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.6] - 2020-04-24
+* Updates to the view quote / request a quote labels.
+
 ## [2.4.5] - 2020-02-18
 * Added code to hide reCAPTCHA v3.
 

@@ -426,7 +426,7 @@ class GM_WooCommerce {
     }
     public function gm_change_shop_browse_list_text($label, $key) {
         if($key == 'browse_list') {
-            $label = "View List";
+            $label = "View Quote";
         }
         if($key == 'already_in_quote') {
             $label = 'Already in quote.';
@@ -439,7 +439,7 @@ class GM_WooCommerce {
             // check if the product is in the exclusion list
             $is_excluded_from_quote = ywraq_is_in_exclusion($product->get_id());
             if(!$is_excluded_from_quote) {
-                echo '<a href="' . get_permalink( $product->get_id() ) . '" class="add-request-quote-button-variable button">Add To Quote</a>';
+                echo '<a href="' . get_permalink( $product->get_id() ) . '" class="add-request-quote-button-variable button">Request a Quote</a>';
             }
         }
     }
