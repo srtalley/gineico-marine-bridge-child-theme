@@ -146,6 +146,8 @@ class GM_WooCommerce {
         // Check for YITH emails and add the terms to the bottom
         add_action ( 'woocommerce_email_footer', array($this, 'gm_woocommerce_email_footer'), 10, 1);
 
+        // Change the YITH Send Your Request button text
+        add_filter('ywraq_form_defaul_submit_label', array($this, 'gm_ywraq_form_defaul_submit_label'));
         // Change the hide quote button text in the admin area
         // add_filter( 'gettext', array($this,'gm_yith_change_text'), 20, 3 );
         /**
@@ -921,7 +923,7 @@ class GM_WooCommerce {
     /**
      * Change the hide quote button text in the admin area
      */
-    function gm_yith_change_text( $translated_text, $text, $domain ) {
+    public function gm_yith_change_text( $translated_text, $text, $domain ) {
         switch ( $translated_text ) {
 
             // Switching these headings but they need to be slightly different
@@ -935,8 +937,18 @@ class GM_WooCommerce {
     } // end gm_yith_change_text
 
 
-    function gm_yith_admin_css() {
+    /** 
+     * CSS for the admin area to fix some YITH settings
+     */
+    public function gm_yith_admin_css() {
         echo '<style type="text/css">.yith-plugin-fw #settings .the-metabox.checkbox {margin: 20px 0 10px !important; } .yith-plugin-fw #settings .the-metabox.checkbox label { margin-left: 0 !important; float: none; display: block !important; } .yith-plugin-fw #settings .the-metabox.checkbox .clear { display: none !important;clear: unset !important; }.yith-plugin-fw-checkbox-field-wrapper { width: auto !important;margin-right: 1px !important; }.yith-plugin-fw span.description { display: inline-block !important; }</style>';
+    }
+
+    /**
+     * Change the default Send Your Request button text
+     */
+    public function gm_ywraq_form_defaul_submit_label() {
+        return 'Send Quote Request';
     }
     /** 
      * Set the quotes back to new status after auto generating email
