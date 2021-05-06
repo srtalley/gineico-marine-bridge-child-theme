@@ -4,8 +4,8 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.4.6a
-Revised: 2021-04-24
+Version: 2.4.7b
+Revised: 2021-05-06
 Template: bridge
 */
 
@@ -17,14 +17,14 @@ Template: bridge
 /* Drop down menu fixes */
 
 .products-menu .second.drop_down_start .inner>ul {
-    min-width: 420px;
-    left: -30%;
+    min-width: 460px;
+    left: -25%;
 }
 
 .products-menu .second.drop_down_start .inner>ul>li {
     display: inline-block;
     float: left;
-    width: 200px;
+    width: 225px;
 }
 
 .products-menu .second.drop_down_start .inner>ul>li:nth-child(odd) {
@@ -246,7 +246,16 @@ input.wpcf7-form-control.wpcf7-submit:not([disabled]),
 
 
 /* WooCoommerce Shop & Cateogry Pages (and sometimes related products) */
-
+.woocommerce .content .qode-child-breadcrumb.breadcrumb.container_inner {
+    padding-top: 0;
+}
+.qode-child-breadcrumb.breadcrumb {
+    font-size: 16px;
+}
+.qode-child-breadcrumb .breadcrumbs, .qode-child-breadcrumb.breadcrumb a, .qode-child-breadcrumb.breadcrumb .current {
+    color: #333;
+    font-weight: bold;
+}
 .woocommerce ul.products .gm-shop-button-wrapper {
     display: flex;
     flex-direction: row;

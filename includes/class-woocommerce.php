@@ -16,6 +16,7 @@ class GM_WooCommerce {
         // Message at the top of the order email - comment to hide.
         // add_action( 'woocommerce_email_order_details', array($this, 'gm_show_message_email_above_order_details'), 1 );
 
+        add_filter('woocommerce_before_shop_loop', array($this, 'gm_woocommerce_before_shop_loop'), 10);
         add_filter('loop_shop_per_page', array($this, 'gm_show_all_products_in_shop'), 100);
 
 
@@ -158,6 +159,17 @@ class GM_WooCommerce {
 
     } // end function construct
 
+    /**
+     * Add breadcrumbs
+     */
+    public function gm_woocommerce_before_shop_loop() {
+        if (function_exists('bridge_qode_child_custom_breadcrumbs')) {
+            ?>
+            
+            <div class="container"><div class="qode-child-breadcrumb breadcrumb container_inner"> <?php bridge_qode_child_custom_breadcrumbs(); ?></div></div>
+            <?php
+        }
+    }
     /** 
      * Add a message above the add to cart button on the product pages
      */

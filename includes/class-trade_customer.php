@@ -639,7 +639,10 @@ class GM_TradeCustomer {
         $message .= 'Email: ' . $user->user_email . "\n\n";
         $message .= 'Download: '  . $package_data->post_title . "\n\n";
         // $message .= "Downloader's IP: ". $_SERVER['REMOTE_ADDR'];
-        wp_mail(get_option("admin_email"), $subject, $message, $headers); 
+        $group_emails = array( get_option("admin_email"), 'pg@gineico.com', 'sales@gineico.com' );
+
+
+        wp_mail($group_emails, $subject, $message, $headers); 
     } 
 
     /*
