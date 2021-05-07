@@ -631,7 +631,7 @@ class GM_TradeCustomer {
     public function gm_trade_customer_download_notification($package){
         $package_data = get_post($package['ID']);
         $user = wp_get_current_user();
-        $headers = 'From: Site Name <noreply@gineicomarine.com.au>' . "\r\n";
+        $headers = 'From: Gineico Marine <noreply@gineicomarine.com.au>' . "\r\n";
         $headers .= 'Content-type: text' . "\r\n";
         $subject = 'Trade Customer Download Notification';
         
@@ -640,7 +640,6 @@ class GM_TradeCustomer {
         $message .= 'Download: '  . $package_data->post_title . "\n\n";
         // $message .= "Downloader's IP: ". $_SERVER['REMOTE_ADDR'];
         $group_emails = array( get_option("admin_email"), 'pg@gineico.com', 'sales@gineico.com' );
-
 
         wp_mail($group_emails, $subject, $message, $headers); 
     } 

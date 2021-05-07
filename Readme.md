@@ -1,7 +1,7 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [2.4.6a] - 2020-05-06
+## [2.4.7] - 2020-05-06
 * Added breadcrumbs for WooCommerce shop pages from GL.
 * Widened the Products menu.
 * Added additional emails for the Trade Customer Download notifications.
