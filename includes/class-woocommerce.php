@@ -6,17 +6,14 @@ class GM_WooCommerce {
 
   
     public function __construct() {
-
         // Message above the add to cart button - comment to hide.
         // add_action( 'woocommerce_checkout_terms_and_conditions', array($this, 'gm_show_message_before_terms'), 21 );
 
         // Message at the top of the order receipt - comment to hide.
         // add_action( 'woocommerce_before_thankyou', array($this, 'gm_show_message_above_order_receipt'), 20 );
 
-        // Message at the top of the order email - comment to hide.
-        // add_action( 'woocommerce_email_order_details', array($this, 'gm_show_message_email_above_order_details'), 1 );
+        add_filter( 'woocommerce_breadcrumb_defaults', array($this, 'gm_woocommerce_set_breadcrumbs'));
 
-        add_filter('woocommerce_before_shop_loop', array($this, 'gm_woocommerce_before_shop_loop'), 10);
         add_filter('loop_shop_per_page', array($this, 'gm_show_all_products_in_shop'), 100);
 
 
@@ -160,15 +157,12 @@ class GM_WooCommerce {
     } // end function construct
 
     /**
-     * Add breadcrumbs
+     * Modify WooCommerce breadcrumb delimiters
      */
-    public function gm_woocommerce_before_shop_loop() {
-        if (function_exists('bridge_qode_child_custom_breadcrumbs')) {
-            ?>
-            
-            <div class="container"><div class="qode-child-breadcrumb breadcrumb container_inner"> <?php bridge_qode_child_custom_breadcrumbs(); ?></div></div>
-            <?php
-        }
+    public function gm_woocommerce_set_breadcrumbs( $defaults ) {
+        // Change the breadcrumb delimeter from '/' to '>'
+        $defaults['delimiter'] = ' &gt; ';
+        return $defaults;
     }
     /** 
      * Add a message above the add to cart button on the product pages

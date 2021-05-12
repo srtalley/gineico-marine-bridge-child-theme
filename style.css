@@ -4,8 +4,8 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.4.7b
-Revised: 2021-05-06
+Version: 2.4.8
+Revised: 2021-05-11
 Template: bridge
 */
 
@@ -162,6 +162,23 @@ header.scrolled .header_top {
     justify-content: center;
 }
 
+/* Breadcrumbs */
+.content .container .container_inner.default_template_holder {
+    padding-top: 0;
+}
+.content .container .container_inner.qode-child-breadcrumb {
+    padding: 50px 0 30px;
+}
+.qode-child-breadcrumb.breadcrumb {
+    font-size: 16px;
+}
+.qode-child-breadcrumb .breadcrumbs, .qode-child-breadcrumb.breadcrumb a, .qode-child-breadcrumb.breadcrumb .current {
+    color: #333;
+    font-weight: bold;
+}
+.qode-child-breadcrumb .woocommerce-breadcrumb {
+    font-weight: bold;
+}
 
 /* Buttons */
 
@@ -244,18 +261,6 @@ input.wpcf7-form-control.wpcf7-submit:not([disabled]),
     color: #585858;
 }
 
-
-/* WooCoommerce Shop & Cateogry Pages (and sometimes related products) */
-.woocommerce .content .qode-child-breadcrumb.breadcrumb.container_inner {
-    padding-top: 0;
-}
-.qode-child-breadcrumb.breadcrumb {
-    font-size: 16px;
-}
-.qode-child-breadcrumb .breadcrumbs, .qode-child-breadcrumb.breadcrumb a, .qode-child-breadcrumb.breadcrumb .current {
-    color: #333;
-    font-weight: bold;
-}
 .woocommerce ul.products .gm-shop-button-wrapper {
     display: flex;
     flex-direction: row;

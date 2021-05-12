@@ -1,21 +1,25 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [2.4.7] - 2020-05-06
+## [2.4.8] - 2021-05-06
+* Added the title.php file from the theme so that the breadcrumbs can be modified.
+* Added the specific WooCommerce breadcrumbs.
+
+## [2.4.7] - 2021-05-06
 * Added breadcrumbs for WooCommerce shop pages from GL.
 * Widened the Products menu.
 * Added additional emails for the Trade Customer Download notifications.
 
-## [2.4.6a] - 2020-04-28
+## [2.4.6a] - 2021-04-28
 * Changed the default Send Your Request button for YITH.
 
-## [2.4.6] - 2020-04-24
+## [2.4.6] - 2021-04-24
 * Updates to the view quote / request a quote labels.
 
-## [2.4.5] - 2020-02-18
+## [2.4.5] - 2021-02-18
 * Added code to hide reCAPTCHA v3.
 
-## [2.4.4] - 2020-02-07
+## [2.4.4] - 2021-02-07
 * Updates to the Trade Customer emails.
 
 ## [2.3.8] - 2020-11-30
