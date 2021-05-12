@@ -4,7 +4,7 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.4.8
+Version: 2.4.8a
 Revised: 2021-05-11
 Template: bridge
 */
@@ -168,6 +168,7 @@ header.scrolled .header_top {
 }
 .content .container .container_inner.qode-child-breadcrumb {
     padding: 50px 0 30px;
+    position: relative !important;
 }
 .qode-child-breadcrumb.breadcrumb {
     font-size: 16px;

@@ -654,19 +654,22 @@ if(!bridge_qode_is_title_hidden()) { ?>
 			<div class="title_border_in_grid_holder"></div>
 		<?php } ?>
 	</div>
-<?php } ?>
+<?php } 
+
+if(!is_front_page()) { ?>
 
 <div class="container"><div class="qode-child-breadcrumb breadcrumb container_inner" <?php print $bridge_qode_page_title_breadcrumbs_animation_data; ?>>
 <?php
 	if(class_exists('WooCommerce') && (is_shop() || is_product() || is_product_category())) {
-		if (function_exists('bridge_qode_child_custom_breadcrumbs') && $bridge_qode_enable_breadcrumbs == "yes") {
 			woocommerce_breadcrumb();
-		}
 	} else {
-		bridge_qode_child_custom_breadcrumbs();
+		if (function_exists('bridge_qode_child_custom_breadcrumbs') && $bridge_qode_enable_breadcrumbs == "yes") {
+			bridge_qode_child_custom_breadcrumbs();
+		}
 	}
 ?>
 </div></div>
+<?php }?>
 <?php
 	/* Return id for archive pages */
 	if(is_category() || is_tag() || is_author()){

@@ -16,6 +16,7 @@ class GM_WooCommerce {
 
         add_filter('loop_shop_per_page', array($this, 'gm_show_all_products_in_shop'), 100);
 
+        add_action( 'before_woocommerce_init', array($this, 'gm_remove_shop_sorting') );
 
         add_action( 'woocommerce_single_product_summary', array($this,'gm_after_add_to_cart_download_pdf'),39 );
 
@@ -204,6 +205,16 @@ class GM_WooCommerce {
         $cols = -1;
         return $cols;
     }
+
+    /**
+     * Remove the shop sorting options
+     */
+    public function gm_remove_shop_sorting() {
+        remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
+        remove_action( 'woocommerce_before_shop_loop' , 'woocommerce_result_count', 20 );
+        remove_action( 'woocommerce_after_shop_loop' , 'woocommerce_result_count', 20 );
+    }
+
 
     /**
     * Add the download catalogue links

@@ -1,7 +1,10 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [2.4.8] - 2021-05-06
+## [2.4.8.1] - 2021-05-12
+* Removed the filter dropdown and result count from the WooCommerce product pages.
+
+## [2.4.8] - 2021-05-11
 * Added the title.php file from the theme so that the breadcrumbs can be modified.
 * Added the specific WooCommerce breadcrumbs.
 
