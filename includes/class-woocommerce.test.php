@@ -6,17 +6,9 @@ class GM_WooCommerce {
 
   
     public function __construct() {
-        // Message above the add to cart button - comment to hide.
-        // add_action( 'woocommerce_checkout_terms_and_conditions', array($this, 'gm_show_message_before_terms'), 21 );
-
-        // Message at the top of the order receipt - comment to hide.
-        // add_action( 'woocommerce_before_thankyou', array($this, 'gm_show_message_above_order_receipt'), 20 );
-
-        add_filter( 'woocommerce_breadcrumb_defaults', array($this, 'gm_woocommerce_set_breadcrumbs'));
-
         add_filter('loop_shop_per_page', array($this, 'gm_show_all_products_in_shop'), 100);
 
-        add_action( 'before_woocommerce_init', array($this, 'gm_remove_shop_sorting') );
+        add_action( 'woocommerce_before_add_to_cart_form', array($this, 'gm_show_product_catalogue'), 20 );
 
         add_action( 'woocommerce_single_product_summary', array($this,'gm_after_add_to_cart_download_pdf'),39 );
 
@@ -25,10 +17,9 @@ class GM_WooCommerce {
         add_action( 'current_screen', array($this,'gm_woocommerce_product_admin'), 10, 1 );
 
         // remove price from shop pages 
-        // add_action( 'woocommerce_init', array($this, 'gm_remove_shop_price') );
+        add_action( 'woocommerce_init', array($this, 'gm_remove_shop_price') );
 
         // add_action('woocommerce_price_format', array($this,'gm_add_currency_suffix'), 1, 2);
-        add_action( 'init', array($this, 'gm_move_bridge_woocommerce_add_to_cart_buttons') );
         
         add_action( 'woocommerce_before_single_product', array($this, 'gm_add_currency_suffix_action') );
         // add_action( 'woocommerce_before_cart', array($this, 'gm_add_currency_suffix_action') );
@@ -54,10 +45,8 @@ class GM_WooCommerce {
         // Change the backorder text in the admin area
         add_filter ('woocommerce_admin_stock_html', array($this, 'gm_woocommerce_admin_stock_html'), 10, 2 );
 
-        // Change lead time text
-        add_filter( 'woocommerce_get_availability_text', array($this, 'gm_change_lead_time_text' ), 10, 2);
-        //add_filter( 'woocommerce_get_stock_html', array( $this, 'gm_change_lead_time_html' ), 10, 2 );
-
+        // Change backorder text
+        add_filter('woocommerce_get_availability_text', array($this, 'gm_change_available_on_backorder_text'), 10, 2);
 
         // Add wrappers to shift the position of buttons
         add_action('woocommerce_before_add_to_cart_quantity', array($this, 'gm_woocommerce_before_add_to_cart_quantity'), 1);
@@ -78,7 +67,6 @@ class GM_WooCommerce {
 
         // If the price is zero, do not display that
         add_action('woocommerce_before_single_product_summary', array($this, 'gm_filter_zero_dollar_prices'));
-        add_action('woocommerce_template_loop_price', array($this, 'gm_filter_zero_dollar_prices'));
 
         // Make all items purchaseable even with an empty price (used to make 
         // the quantity buttons show up for quotes)
@@ -94,10 +82,6 @@ class GM_WooCommerce {
         add_filter( 'woocommerce_get_price_html', array($this, 'gm_hide_price'), 10, 2 );
         // add_filter( 'woocommerce_variation_price_html', array($this, 'gm_hide_price'), 10, 2 );
         // add_filter( 'woocommerce_variation_sale_price_html', array($this, 'gm_hide_price'), 10, 2 );
-
-        // Show a "from" price for variable products in the shop   
-        // add_filter( 'woocommerce_variable_sale_price_html', array($this, 'gm_show_from_price'), 10, 2 );
-        add_filter( 'woocommerce_variable_price_html', array($this, 'gm_show_from_price'), 10, 2 );
 
         // Force the quantity buttons to always show
         add_filter( 'woocommerce_quantity_input_args', array($this, 'gm_force_quantity_buttons_to_show'), 20, 2 );        
@@ -130,9 +114,6 @@ class GM_WooCommerce {
         // PDF file name
         add_filter( 'ywraq_pdf_file_name', array($this, 'gm_ywraq_pdf_file_name'), 10, 2 );
         
-        // PDF file url
-        add_filter('ywraq_pdf_file_url', array($this, 'gm_ywraq_pdf_url_string'), 10, 1);
-
         // PDF paper orientation
         add_filter('ywraq_change_paper_orientation' , array($this, 'gm_ywraq_change_paper_orientation'));
 
@@ -145,8 +126,6 @@ class GM_WooCommerce {
         // Check for YITH emails and add the terms to the bottom
         add_action ( 'woocommerce_email_footer', array($this, 'gm_woocommerce_email_footer'), 10, 1);
 
-        // Change the YITH Send Your Request button text
-        add_filter('ywraq_form_defaul_submit_label', array($this, 'gm_ywraq_form_defaul_submit_label'));
         // Change the hide quote button text in the admin area
         // add_filter( 'gettext', array($this,'gm_yith_change_text'), 20, 3 );
         /**
@@ -154,50 +133,62 @@ class GM_WooCommerce {
          */
         // add_action( 'woocommerce_before_single_product', array($this, 'gm_add_quote_continue_shopping_button_setup') );
 
-        // Remove price from structured data
-        add_filter( 'woocommerce_structured_data_product_offer', '__return_empty_array' );
+        add_filter( 'add_to_cart_redirect', array($this, 'misha_skip_cart_redirect_checkout') );
+        add_action('template_redirect', array($this,'wholesale_product_page_redirect'));
 
     } // end function construct
-
-    /**
-     * Modify WooCommerce breadcrumb delimiters
-     */
-    public function gm_woocommerce_set_breadcrumbs( $defaults ) {
-        // Change the breadcrumb delimeter from '/' to '>'
-        $defaults['delimiter'] = ' &gt; ';
-        return $defaults;
+ 
+    function misha_skip_cart_redirect_checkout( $url ) {
+        wl('my url is ' . $url); 
+        return $url;
+        // return wc_get_checkout_url();
     }
-    /** 
-     * Add a message above the add to cart button on the product pages
-     */
-    // public function gm_show_message_before_terms() {
-    //     echo '<div class="product-message-above-add-to-cart" style="margin: 10px 0;">';
-    //     echo '<p style="font-style: oblique; color: #ea0404;">Please note we are closed for the Christmas / New Year period from the 18th December 2020 till 11th January 2021 any orders placed in this time will be addressed in the week starting the 11th January 2021.</p>';
-    //     echo '</div>';
-    // }
-    /** 
-     * Add a message above the order receipt
-     */
-    // public function gm_show_message_above_order_receipt() {
-    //     echo '<div class="checkout-message-above-receipt" style="margin-bottom: 20px;">';
-    //     echo '<p style="font-style: oblique; color: #ea0404;">Please note any orders placed in our Christmas / New Year holiday period from the 18th December 2020 till 11th January 2021 will be addressed in the week starting the 11th January 2021.</p>';
-    //     echo '</div>';
-    // }
-    /** 
-     * Add a message above order details in the email
-     */
-    // public function gm_show_message_email_above_order_details() {
-    //     echo '<div class="email-message-above-order-details" style="margin-bottom: 20px;">';
-    //     echo '<p style="font-style: oblique; color: #ea0404;">If you have placed this order in our Christmas / New Year holiday period from the 18th December 2020 till 11th January 2021, these orders will be addressed in the week starting the 11th January 2021.</p>';
-    //     echo '</div>';
-    // }
+    public function wholesale_product_page_redirect(){
+        // wl($_SERVER);
+        wl($_POST);
+        if (class_exists('WooCommerce')){
+            if(is_product() && !current_user_can('administratdor')){
+//                 global $product;
+//                 wl($product);
+wl($_SERVER);
+                wl('referrrerrrre: ' . $_SERVER['HTTP_REFERRER']);
+//    wl('?add-to-cart=' . $product->get_id());
+
+if(substr($_SERVER['HTTP_REFERRER'], 0, strlen('?add-to-cart')) === '?add-to-cart') {
+    wl('heeeee');
+
+} else {
+    wl('llllll');
+}
+                if(isset($_SERVER['HTTP_REFERRER']) && substr($_SERVER['HTTP_REFERRER'], 0, strlen('?add-to-cart')) === '?add-to-cart') {
+                    
+                    // if(isset($_SERVER['HTTP_REFERRER']) && $_SERVER['HTTP_REFERRER'] === '?add-to-cart=' . $product->get_id()) {
+
+                    wl('matched this parrrrt');
+                    $product_term_ids = wc_get_product_term_ids($post->ID, 'product_cat');
+                    // Wholesale Items
+                    $wholesale_category_id = '93d8';
+                    if ( in_array( $wholesale_category_id, $product_term_ids ) ) {
+                        $query_access = isset($_GET['access']) ? $_GET['access'] : '';
+                        if($query_access != 'wholesaler') {
+                            wp_redirect(home_url('/shop/'));
+                            exit();
     
+                        }
+                    }
+
+                }
+                
+            }
+        } 
+        return;
+    } 
     /**
-     * Remove the price from shop pages 
+     * Remove the price from shop pages
      */
-    // public function gm_remove_shop_price() {
-    //     remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10 );
-    // }
+    public function gm_remove_shop_price() {
+        remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10 );
+    }
 
     /**
      * Make the shop category pages show all items
@@ -207,16 +198,6 @@ class GM_WooCommerce {
         $cols = -1;
         return $cols;
     }
-
-    /**
-     * Remove the shop sorting options
-     */
-    public function gm_remove_shop_sorting() {
-        remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
-        remove_action( 'woocommerce_before_shop_loop' , 'woocommerce_result_count', 20 );
-        remove_action( 'woocommerce_after_shop_loop' , 'woocommerce_result_count', 20 );
-    }
-
 
     /**
     * Add the download catalogue links
@@ -328,21 +309,14 @@ class GM_WooCommerce {
                 case 'Related products':
                     $translated_text = __( 'You may also like&hellip;&nbsp;', 'woocommerce' );
                     break;
-                // case 'In stock':
-                //     $translated_text = __( 'LEAD TIME: In Stock', 'woocommerce');
-                //     break;
+                case 'In stock':
+                    $translated_text = __( 'LEAD TIME: In Stock', 'woocommerce');
+                    break;
                 case 'Clear':
                     $translated_text = __( 'Clear Selection', 'woocommerce');
                     break;
                 case 'Coupon(s):':
                     $translated_text = __( 'Discount:', 'woocommerce');
-                case 'Thanks for your order. It’s on-hold until we confirm that payment has been received. In the meantime, here’s a reminder of what you ordered:':
-                    $translated_text = __( 'Thanks for your order. It’s on-hold until we confirm that payment has been received.
-                    You will receive notification from the courier when and where your package is in transit once it leaves our warehouse.
-                    In the meantime, here’s a reminder of what you ordered:', 'woocommerce');
-                    break;
-
-                
             }
         } 
         if($domain == 'bridge') {
@@ -426,44 +400,8 @@ class GM_WooCommerce {
         echo '<style type="text/css">#acf-group_5bbe75339e188 .inside.acf-fields {column-count: 2; column-width: 380px; position: relative; display: block; } #acf-group_5bbe75339e188 .acf-field { position: relative; display: block; -webkit-column-break-inside: avoid; break-inside: avoid;page-break-inside: avoid;}</style>';
 
     } // end function gm_woocomerce_product_admin_area_changes
-    /**
-     * Move the add to cart buttons on the category pages
-     */
-    public function gm_move_bridge_woocommerce_add_to_cart_buttons() {
-        remove_action( 'bridge_qode_action_woocommerce_after_product_image', 'woocommerce_template_loop_add_to_cart', 10 );
-        add_action( 'woocommerce_after_shop_loop_item_title', array($this, 'gm_add_shop_button_wrapper_start'), 20 );
-        add_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_add_to_cart', 20 );
-        add_action( 'woocommerce_after_shop_loop_item', array($this, 'gm_show_add_to_quote_on_category_pages'), 15 );
-        add_action( 'woocommerce_after_shop_loop_item', array($this, 'gm_add_shop_button_wrapper_end'), 16 );
 
-    }
-    public function gm_add_shop_button_wrapper_start() {
-        echo '<div class="gm-shop-button-wrapper">';
-        add_filter( 'ywraq_get_label', array($this, 'gm_change_shop_browse_list_text'), 10, 2);
-
-    }
-    public function gm_add_shop_button_wrapper_end() {
-        echo '</div>';
-    }
-    public function gm_change_shop_browse_list_text($label, $key) {
-        if($key == 'browse_list') {
-            $label = "View Quote";
-        }
-        if($key == 'already_in_quote') {
-            $label = 'Already in quote.';
-        }
-        return $label;
-    }
-    public function gm_show_add_to_quote_on_category_pages() {
-        global $product;
-        if($product->get_type() == 'variable') {
-            // check if the product is in the exclusion list
-            $is_excluded_from_quote = ywraq_is_in_exclusion($product->get_id());
-            if(!$is_excluded_from_quote) {
-                echo '<a href="' . get_permalink( $product->get_id() ) . '" class="add-request-quote-button-variable button">Request a Quote</a>';
-            }
-        }
-    }
+    
     /**
      * Add the currency after the price
      */
@@ -630,9 +568,9 @@ class GM_WooCommerce {
      * div that can be referenced in CSS
      */
     public function gm_hide_add_to_cart_button() {
+
         global $product;
-        if($product->get_price() == 0 || $product->get_price() == '') {
-        //if($product->get_price() == 0 || $product->get_price() == '' || $product->get_stock_status() == 'onbackorder') {
+        if($product->get_price() == 0 || $product->get_price() == '' || $product->get_stock_status() == 'onbackorder') {
             echo '<div class="remove-buttons"></div>';
         } else if(function_exists('get_field')) { 
             $hide_add_to_cart_button_setting = get_field('hide_add_to_cart_button', $product->get_id());
@@ -648,19 +586,36 @@ class GM_WooCommerce {
      * Otherwise change the buttons to say "Buy Now" and link to the product page.
      */
     public function gm_hide_add_to_cart_button_in_shop($add_to_cart_html, $product) {
+        // wl($add_to_cart_html);
+        // wl($product->getType)
+        // $product_type = get_the_terms( $product->get_id(),'product_type')[0]->slug;
+        if($product->is_type( 'variable' )) {
+            $product_term_ids = wc_get_product_term_ids($product->ID, 'product_cat');
+            $wholesale_category_id = '945';
+            if ( in_array( $wholesale_category_id, $product_term_ids ) ) {
 
-        if(function_exists('get_field')) { 
-            $hide_add_to_cart_button_setting = get_field('hide_add_to_cart_button', $product->get_id());
-            if($hide_add_to_cart_button_setting){
-            // if($hide_add_to_cart_button_setting || $product->get_stock_status() == 'onbackorder'){
-                $add_to_cart_html = '<span class="add-to-cart-button-outer"><span class="add-to-cart-button-inner"><a href="' . get_permalink( $product->get_id() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button qbutton add-to-cart-button no-cart-icon" data-product_id="'. $product->get_id() . '" aria-label="View &ldquo;' . $product->get_title() . '&rdquo; Now" rel="nofollow">View Item</a></span></span>';
-                return $add_to_cart_html;
+                // Change the permalink
+                $permalink = get_permalink( $product->get_id() );
+                $add_to_cart_html = str_replace($permalink, $permalink . '?access=wholesaler', $add_to_cart_html);
+         
             }
+            
         }
-        $add_to_cart_html = str_replace('Select options', 'Buy Now', $add_to_cart_html);
 
-        $add_to_cart_html = str_replace('Add to cart', 'Buy Now', $add_to_cart_html);
         return $add_to_cart_html;
+// wl($product_type);
+        // if(function_exists('get_field')) { 
+        //     $hide_add_to_cart_button_setting = get_field('hide_add_to_cart_button', $product->get_id());
+        //     if($hide_add_to_cart_button_setting || $product->get_stock_status() == 'onbackorder'){
+        //         $add_to_cart_html = '<span class="add-to-cart-button-outer"><span class="add-to-cart-button-inner"><a href="' . get_permalink( $product->get_id() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button qbutton add-to-cart-button" data-product_id="'. $product->get_id() . '" aria-label="View &ldquo;' . $product->get_title() . '&rdquo; Now" rel="nofollow">View Product</a></span></span>';
+        //         return $add_to_cart_html;
+        //     }
+        // }
+
+        $add_to_cart_html = '<span class="add-to-cart-button-outer"><span class="add-to-cart-button-inner"><a href="' . get_permalink( $product->get_id() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button qbutton add-to-cart-button" data-product_id="'. $product->get_id() . '" aria-label="Buy &ldquo;' . $product->get_title() . '&rdquo; Now" rel="nofollow">Buy Now</a></span></span>';
+
+        return $add_to_cart_html;
+
     }
     /**
      * Change the add to cart button text
@@ -692,37 +647,19 @@ class GM_WooCommerce {
 
             $hide_price = get_field('hide_price', $product_id);
 
-            if($product->get_price() == '0' || $hide_price) {
+            if($hide_price) {
                 // add_action('wp_footer', array($this,'gm_hide_variation_price_css'));
-                return '<div class="hide-price">&nbsp;</div>';
+                return '';
             } 
         }
         
-        // if($product->get_stock_status() == 'onbackorder') {
-        //     return '<div class="hide-price">&nbsp;</div>';
-        // }
+        if($product->get_stock_status() == 'onbackorder') {
+            return '<div class="hide-price"></div>';
+        }
 
         return $price_html;
     }
-    /** 
-     * Show variable prices as "From xyz" on shop pages
-     */
-    public function gm_show_from_price( $price, $product ) {
-          
-        $min_var_reg_price = $product->get_variation_regular_price( 'min', true );
-        $min_var_sale_price = $product->get_variation_sale_price( 'min', true );
-        $max_var_reg_price = $product->get_variation_regular_price( 'max', true );
-        $max_var_sale_price = $product->get_variation_sale_price( 'max', true );
-                  
-        if ( ! ( $min_var_reg_price == $max_var_reg_price && $min_var_sale_price == $max_var_sale_price ) ) {   
-           if ( $min_var_sale_price < $min_var_reg_price ) {
-              $price = sprintf( __( 'From <del>%1$s</del><ins>%2$s</ins>', 'woocommerce' ), wc_price( $min_var_reg_price ), wc_price( $min_var_sale_price ) );
-           } else {
-              $price = sprintf( __( 'From %1$s', 'woocommerce' ), wc_price( $min_var_reg_price ) );
-           }
-        }
-        return $price;
-    }
+
     /**
      * Add simple CSS to the footer to hide the variation price that's shown
      * when a selection is made
@@ -750,40 +687,20 @@ class GM_WooCommerce {
         return $args;
     }
      /**
-     * Change lead time text 
+     * Change lead time text
      */
-    public function gm_change_lead_time_text($availability, $product) {
+    public function gm_change_available_on_backorder_text($availability, $product) {
 
-        // Change for in stock products that have a quantity specified
+        $availability_backorder = $this->starts_with($availability, 'Available on backorder');
+        if($availability_backorder) {
 
-        // if($product->managing_stock() && $product->is_in_stock()) {
-            // $availability = 'In Stock';    
-        // } else {
-            $availability_backorder = $this->starts_with($availability, 'Available on backorder');
-            if($availability_backorder) {
-    
-                $availability = str_replace('Available on backorder', '', $availability);
-                $availability = str_replace('class="wclt_lead_time">&nbsp;| ', 'class="wclt_lead_time">', $availability);
-            }
-            //     // Available on backorder<span style="color: #1c1d20;" class="wclt_lead_time">&nbsp;| LEAD TIME: 8 - 10 weeks
-        // }
-       
+            $availability = str_replace('Available on backorder', '', $availability);
+            $availability = str_replace('class="wclt_lead_time">&nbsp;| ', 'class="wclt_lead_time">', $availability);
+        }
+            // Available on backorder<span style="color: #1c1d20;" class="wclt_lead_time">&nbsp;| LEAD TIME: 8 - 10 weeks
         return $availability;
     }
-    /**
-     * Change the lead time text for in stock products that 
-     * don't have a stock level set.
-     */
-    // public function gm_change_lead_time_html($html, $product) {
-    //     if(!$product->managing_stock() && $product->is_in_stock()) {
-    //             $html = str_replace(' class="stock wclt_lead_time">LEAD TIME:', ' class="stock wclt_lead_time">In Stock | LEAD TIME:', $html);
-    //     }
-    //     return $html;
-    // }
 
-    /**
-     * Utility function
-     */
     public function starts_with($string, $startString) { 
         $len = strlen($startString); 
         return (substr($string, 0, $len) === $startString); 
@@ -823,7 +740,7 @@ class GM_WooCommerce {
     }
 
     /**
-     * Change the Yith PDF file name
+     * Change the PDF file name
      */
     public function gm_ywraq_pdf_file_name($pdf_file_name, $order_id) {
         $order = wc_get_order($order_id);
@@ -846,21 +763,6 @@ class GM_WooCommerce {
         return $pdf_file_name;
     }
 
-    /** 
-     * Add a random string to the end of the URL to break the cache so that the 
-     * proper PDF downloads.
-     */
-    public function gm_ywraq_pdf_url_string($url) {
-
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyz'; 
-        $randomString = ''; 
-    
-        for ($i = 0; $i < 6; $i++) { 
-            $index = rand(0, strlen($characters) - 1); 
-            $random_string .= $characters[$index]; 
-        } 
-        return $url . '?ver=' .$random_string;
-    }
     /** 
      * Change the PDF paper orientation
      */
@@ -942,7 +844,7 @@ class GM_WooCommerce {
     /**
      * Change the hide quote button text in the admin area
      */
-    public function gm_yith_change_text( $translated_text, $text, $domain ) {
+    function gm_yith_change_text( $translated_text, $text, $domain ) {
         switch ( $translated_text ) {
 
             // Switching these headings but they need to be slightly different
@@ -956,18 +858,8 @@ class GM_WooCommerce {
     } // end gm_yith_change_text
 
 
-    /** 
-     * CSS for the admin area to fix some YITH settings
-     */
-    public function gm_yith_admin_css() {
+    function gm_yith_admin_css() {
         echo '<style type="text/css">.yith-plugin-fw #settings .the-metabox.checkbox {margin: 20px 0 10px !important; } .yith-plugin-fw #settings .the-metabox.checkbox label { margin-left: 0 !important; float: none; display: block !important; } .yith-plugin-fw #settings .the-metabox.checkbox .clear { display: none !important;clear: unset !important; }.yith-plugin-fw-checkbox-field-wrapper { width: auto !important;margin-right: 1px !important; }.yith-plugin-fw span.description { display: inline-block !important; }</style>';
-    }
-
-    /**
-     * Change the default Send Your Request button text
-     */
-    public function gm_ywraq_form_defaul_submit_label() {
-        return 'Send Quote Request';
     }
     /** 
      * Set the quotes back to new status after auto generating email

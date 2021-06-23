@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [2.4.8.2] - 2021-06-25
+* Removed the price from the WooCommerce rich results.
+
 ## [2.4.8.1] - 2021-05-12
 * Removed the filter dropdown and result count from the WooCommerce product pages.
 
