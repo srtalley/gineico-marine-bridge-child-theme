@@ -1,4 +1,7 @@
 <?php 
+/**
+ * v2.4.9
+ */
 
 namespace GineicoMarine\Theme;
 
@@ -154,8 +157,8 @@ class GM_WooCommerce {
          */
         // add_action( 'woocommerce_before_single_product', array($this, 'gm_add_quote_continue_shopping_button_setup') );
 
-        // Remove price from structured data
-        add_filter( 'woocommerce_structured_data_product_offer', '__return_empty_array' );
+        // Remove product structured data
+        add_filter( 'woocommerce_structured_data_product', array($this, 'gm_remove_product_structured_data') );
 
     } // end function construct
 
@@ -969,6 +972,14 @@ class GM_WooCommerce {
     public function gm_ywraq_form_defaul_submit_label() {
         return 'Send Quote Request';
     }
+
+    /**
+     * Remove Product structured data
+     */
+    public function gm_remove_product_structured_data( $markup ) {
+        return '';
+    }
+
     /** 
      * Set the quotes back to new status after auto generating email
      */

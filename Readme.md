@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [2.4.9] - 2021-07-01
+* Removed the product schema totally.
+
 ## [2.4.8.2] - 2021-06-25
 * Removed the price from the WooCommerce rich results.
 
