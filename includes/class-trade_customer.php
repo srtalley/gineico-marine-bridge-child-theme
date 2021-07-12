@@ -1,5 +1,7 @@
 <?php 
-
+/**
+ * v2.5.0
+ */
 namespace GineicoMarine\Theme;
 
 class GM_TradeCustomer {
@@ -569,6 +571,7 @@ class GM_TradeCustomer {
      * Set the email addresses that the trade customer approvals should go to
      */
     public function gm_trade_customer_approval_email_addresses($emails) {
+
         $emails = array(get_option("admin_email"),'pg@gineico.com');
         return $emails;
     }
@@ -605,9 +608,13 @@ class GM_TradeCustomer {
         ob_end_clean();
         $new_message .= '<h2>Thank you for registering for a Trade Account. Your Trade Account has now been approved.</h2>';
         $new_message .= '<p>{username}</p>';
-        $new_message .= '<p>Set your password at this link: <br />';
-        $new_message .= '<strong><a href="' . site_url() . '/my-account/lost-password/' .'" target="_blank" style="color: #242e4a">' . site_url() . '/my-account/lost-password/</a></strong></p>';
-        $new_message .= '<p>In the future, once your password is set you can simply log into your account at <strong><a href="' . site_url() . '/my-account" target="_blank" style="color: #242e4a">' . site_url() . '/my-account</a></strong> then use the website menu tab <strong>TRADE ONLY DOWNLOADS</strong> that sits under the <strong>CONTACT</strong> tab in the main menu</p>';
+        $new_message .= '<p>{password}</p>';
+
+        // $new_message .= '<p>Set your password at this link: <br />';
+        // $new_message .= '<strong><a href="' . site_url() . '/my-account/lost-password/' .'" target="_blank" style="color: #242e4a">' . site_url() . '/my-account/lost-password/</a></strong></p>';
+        $new_message .= '<p>Please log into your account at <strong><a href="' . site_url() . '/my-account" target="_blank" style="color: #242e4a">' . site_url() . '/my-account</a></strong> then use the website menu tab <strong>TRADE ONLY DOWNLOADS</strong> that sits under the <strong>CONTACT</strong> tab in the main menu.</p>';
+        $new_message .= '<p>You may change your password at <strong><a href="' . site_url() . '/my-account/edit-account/" target="_blank" style="color: #242e4a">' . site_url() . '/my-account/edit-account/</a></strong>.</p>';
+
         ob_start();
         include dirname(THEME_FUNCTIONS__FILE__) . '/woocommerce/emails/email-footer.php';
         $new_message .= ob_get_contents();

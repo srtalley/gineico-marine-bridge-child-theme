@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [2.5.0] - 2021-07-11
+* Updates to the trade customer emails to include the password.
+
 ## [2.4.9] - 2021-07-01
 * Removed the product schema totally.
 
