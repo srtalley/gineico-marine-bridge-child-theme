@@ -1,6 +1,6 @@
 <?php 
 /**
- * v2.5.0
+ * v2.5.1
  */
 namespace GineicoMarine\Theme;
 
@@ -17,6 +17,9 @@ class GM_TradeCustomer {
 
         add_filter( 'woocommerce_registration_errors', array($this,'gm_trade_customer_validate_user_frontend_fields'), 10 );
         add_filter( 'woocommerce_save_account_details_errors', array($this,'gm_trade_customer_validate_user_frontend_fields'), 10 );
+
+        // Hide the registration form on My Account
+        add_action( 'woocommerce_before_customer_login_form', array($this, 'gm_hide_woocommerce_registration'), 10, 1);
         
         add_action( 'user_register', array($this,'gm_create_user_as_trade_customer'), 1); // register/checkout
         add_action( 'personal_options_update', array($this,'gm_trade_customer_save_account_fields') ); // edit own account admin
@@ -53,8 +56,10 @@ class GM_TradeCustomer {
         add_filter( 'manage_users_columns', array($this, 'gm_modify_user_table') );
         add_filter( 'manage_users_custom_column', array($this, 'gm_modify_user_table_row'), 10, 3 );
         add_filter( 'manage_users_sortable_columns', array($this, 'gm_make_registered_column_sortable') );
+
     }
-    
+
+
     /**
      * Add a trade customer registration form
      */
@@ -140,7 +145,20 @@ class GM_TradeCustomer {
         } // end if pending approval
         return ob_get_clean();
     }
+    /** 
+     * Hide the registration form on the My Account login page
+     */
+    public function gm_hide_woocommerce_registration() {
+        add_filter( 'option_woocommerce_enable_myaccount_registration', array($this, 'gm_filter_woocommerce_enable_myaccount_registration') );
+    }
 
+    /**
+     * Filter the option to allow registrations in WooCommerce. We need this on so that the Trade Customer registrations
+     * can work, but we don't want to show the form on the login page.
+     */
+    public function gm_filter_woocommerce_enable_myaccount_registration() {
+        return 'no';
+    }
     /**
      * Shortcode to check if a user has the trade customer role
      */
@@ -156,7 +174,7 @@ class GM_TradeCustomer {
                 die();
             }
         } else {
-            wp_redirect( home_url('/trade-customer-registration/') );
+            wp_redirect( home_url('/my-account/') );
             die();
         }
     }
@@ -168,6 +186,18 @@ class GM_TradeCustomer {
         $user = get_user_by('id', $user_id);
         $roles = ( array ) $user->roles;
         if (in_array( 'trade_customer', $roles )) {
+            return true;
+        } 
+        return false;
+    }
+
+    /**
+     * Function to check if a user has the regular customer role
+     */
+    public function gm_wc_is_regular_customer_role($user_id) {
+        $user = get_user_by('id', $user_id);
+        $roles = ( array ) $user->roles;
+        if (in_array( 'customer', $roles )) {
             return true;
         } 
         return false;
