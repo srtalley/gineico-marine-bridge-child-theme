@@ -4,8 +4,8 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.5.0
-Revised: 2021-05-11
+Version: 2.5.2
+Revised: 2021-07-16
 Template: bridge
 */
 
@@ -1444,10 +1444,12 @@ body.woocommerce-js .yith_ywraq_add_item_browse_message a:hover,
     flex-wrap: wrap;
     justify-content: space-between;
     box-sizing: border-box;
+    margin: 0 -10px;
 }
 
 .trade-customer-registration-form .form-row {
-    flex: 0 1 48%;
+    flex: 1 1 48%;
+    padding: 0 10px;
 }
 
 .trade-customer-registration-form .g-recaptcha {
@@ -1457,18 +1459,33 @@ body.woocommerce-js .yith_ywraq_add_item_browse_message a:hover,
 .trade-customer-registration-form .form-row:last-child {
     flex: 1 1 100%;
 }
-
+.trade-customer-registration-form .woocommerce-privacy-policy-text {
+    flex: 1 1 100%;
+    padding: 0 10px;
+}
 .trade-customer-registration-form .form-row label {
     display: none;
 }
-
+.trade-customer-registration-form .form-row label abbr[title] {
+    border-bottom: none !important;
+    cursor: inherit !important;
+    text-decoration: none !important;
+}
+.trade-customer-registration-form .form-row label .optional {
+    display: none;
+}
 .trade-customer-registration-form .form-row input[type=text],
 .trade-customer-registration-form .form-row input[type=email],
 .trade-customer-registration-form .form-row input[type=password],
-.trade-customer-registration-form .form-row input[type=tel] {
+.trade-customer-registration-form .form-row input[type=tel],
+.trade-customer-registration-form .form-row textarea {
     width: 100%;
     box-sizing: border-box;
     font-size: 16px;
+}
+.trade-customer-registration-form .form-row textarea {
+    resize: vertical;
+    height: 90px;
 }
 
 .trade-customer-registration-form .select2.select2-container {

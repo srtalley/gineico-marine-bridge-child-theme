@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [2.5.2] - 2021-07-16
+* Disabled the New User Approve user denied email.
+
 ## [2.5.1] - 2021-07-14
 * Hid the registration form on the My Account page.
 * Redirects non-trade customers to the /my-account page.

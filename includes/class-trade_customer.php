@@ -1,6 +1,6 @@
 <?php 
 /**
- * v2.5.1
+ * v2.5.2
  */
 namespace GineicoMarine\Theme;
 
@@ -43,6 +43,9 @@ class GM_TradeCustomer {
         add_filter( 'new_user_approve_approve_user_message_default', array($this, 'gm_trade_customer_approve_user_message'), 10, 1 );
         add_filter( 'new_user_approve_approve_user_subject', array($this, 'gm_trade_customer_approve_user_subject'), 10, 1 );
 
+        // Removes the deny user email
+        add_action( 'init', array($this, 'gm_trade_customer_disable_deny_user_email') );
+
         // allow getting the role
         add_filter( 'gm_wc_is_trade_customer', array($this, 'gm_wc_is_trade_customer_role'), 10, 1);
 
@@ -58,7 +61,6 @@ class GM_TradeCustomer {
         add_filter( 'manage_users_sortable_columns', array($this, 'gm_make_registered_column_sortable') );
 
     }
-
 
     /**
      * Add a trade customer registration form
@@ -82,8 +84,10 @@ class GM_TradeCustomer {
         ob_start();
         
         if($is_pending_user) {
+            wp_redirect( home_url('/trade-thank-you/') );
+            die();
             ?>
-            <h3>Your account is currently pending approval. Please wait to hear from Gineico Marine. Thank you.</h3>
+            <!-- <h3>Your account is currently pending approval. Please wait to hear from Gineico Marine. Thank you.</h3> -->
             <?php
         } else {
 
@@ -222,6 +226,19 @@ class GM_TradeCustomer {
                 'placeholder' => __( 'Company', 'gineicomarine' ),
                 'required'    => true,
             ),
+            'billing_abn_acn' => array(
+                'type'        => 'text',
+                'label'       => __( 'ABN / ACN', 'gineicomarine' ),
+                'placeholder' => __( 'ABN / ACN', 'gineicomarine' ),
+                'required'    => true,
+                'user_additional' => true
+            ),
+            'billing_website' => array(
+                'type'        => 'text',
+                'label'       => __( 'Website', 'gineicomarine' ),
+                'placeholder' => __( 'Website', 'gineicomarine' ),
+                'user_additional' => true
+            ),
             'email' => array(
                 'type'        => 'email',
                 'label'       => __( 'Email Address', 'gineicomarine' ),
@@ -252,7 +269,6 @@ class GM_TradeCustomer {
                 'type'        => 'country',
                 'label'       => __( 'Country', 'woocommerce' ),
                 'placeholder' => __('Choose your country.', 'woocommerce'),
-                // 'clear'       => true,
                 'required'    => true,
                 'class' => ['address-field'],
                 'default'     => 'AU'
@@ -261,7 +277,6 @@ class GM_TradeCustomer {
                 'type'        => 'state',
                 'label'       => __( 'State', 'woocommerce' ),
                 'placeholder' => __('Choose your state.', 'woocommerce'),
-
                 'required'    => true,
                 'class' => ['address-field'],
                 'validate' => ['state']
@@ -283,6 +298,12 @@ class GM_TradeCustomer {
                 'type'        => 'tel',
                 'label'       => __( 'Mobile', 'gineicomarine' ),
                 'placeholder' => __( 'Mobile', 'gineicomarine' ),
+                'required'    => false,
+                'user_additional' => true
+            ),
+            'billing_tell_us_more' => array(
+                'type'        => 'textarea',
+                'label'       => __( 'Tell us a bit more about your business', 'gineicomarine' ),
                 'required'    => false,
                 'user_additional' => true
             ),
@@ -319,7 +340,16 @@ class GM_TradeCustomer {
                             <label for="<?php echo $key; ?>"><?php echo $field_args['label']; ?></label>
                         </th>
                         <td>
+                            <?php if($field_args['type'] == 'textarea') {
+                            ?>
+                                <textarea rows="4" name="<?php echo $key; ?>" id="<?php echo $key; ?>" class="regular-textarea"><?php echo $current_value; ?></textarea>
+                            <?php
+                            } else {
+                            ?>
                             <input type="text" name="<?php echo $key; ?>" id="<?php echo $key; ?>" value="<?php echo $current_value; ?>" class="regular-text">
+                                <?php
+                            }
+                            ?>
                         </td>
                     </tr>
                 <?php 
@@ -659,6 +689,13 @@ class GM_TradeCustomer {
     public function gm_trade_customer_approve_user_subject($subject) {
         $subject = 'Gineico Marine - Trade Customer Registration Approved';
         return $subject;
+    }
+
+    /**
+     * Stop the New User Approve plugin from sending an email when a user is denied.
+     */
+    public function gm_trade_customer_disable_deny_user_email() { //removing actions of yith plugin
+        remove_action( 'new_user_approve_deny_user', array( pw_new_user_approve(), 'deny_user' ) );
     }
     
     /**
