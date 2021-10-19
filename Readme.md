@@ -1,6 +1,18 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [2.5.4] - 2021-08-15
+* Made the shop page categories so they can take up to two lines wihtout messing up the button layout.
+* Added AJAX to check if a product is a Quick Gyro Stabilizer when clicking the Request a Quote button.
+* Added redirect and overlay when adding a Quick Gyro Stabilizer to a quote.
+
+## [2.5.3] - 2021-08-08
+* Renamed the Description button to More Information.
+* Moved the WooCommerce tabs (shown as buttons) above the Request a Quote button.
+* Removed the Additional Information tab and instead show that at the bottom of the More Information tab.
+* Styled the WooCommerce tab buttons to look like the download PDF button but in black and added down arrow.
+* Changed single product font sizes. 
+
 ## [2.5.2] - 2021-07-16
 * Disabled the New User Approve user denied email.
 

@@ -31,7 +31,7 @@ class GM_WooCommerce {
         // add_action( 'woocommerce_init', array($this, 'gm_remove_shop_price') );
 
         // add_action('woocommerce_price_format', array($this,'gm_add_currency_suffix'), 1, 2);
-        add_action( 'init', array($this, 'gm_move_bridge_woocommerce_add_to_cart_buttons') );
+        add_action( 'init', array($this, 'gm_move_bridge_woocommerce_add_to_cart_buttons'));
         
         add_action( 'woocommerce_before_single_product', array($this, 'gm_add_currency_suffix_action') );
         // add_action( 'woocommerce_before_cart', array($this, 'gm_add_currency_suffix_action') );
@@ -129,7 +129,6 @@ class GM_WooCommerce {
         // Set the default country at checkout
         add_filter( 'default_checkout_billing_country', array($this, 'gm_change_default_checkout_country') );
 
-
         // PDF file name
         add_filter( 'ywraq_pdf_file_name', array($this, 'gm_ywraq_pdf_file_name'), 10, 2 );
         
@@ -160,6 +159,16 @@ class GM_WooCommerce {
         // Remove product structured data
         add_filter( 'woocommerce_structured_data_product', array($this, 'gm_remove_product_structured_data') );
 
+        // Change the product tabs
+        add_filter( 'woocommerce_product_description_tab_title', array($this, 'gm_change_single_product_description_tab_title') );
+
+        // Move the product tabs
+        add_action( 'woocommerce_before_single_product', array($this, 'gm_change_single_product_layout'), 60);
+
+
+        // Ajax to see if a product is a quick gyro stabilizer
+        add_action( 'wp_ajax_nopriv_gm_check_is_quick_gyro_stabilizer', array($this, 'gm_check_is_quick_gyro_stabilizer') );
+        add_action( 'wp_ajax_gm_check_is_quick_gyro_stabilizer', array($this, 'gm_check_is_quick_gyro_stabilizer') );
     } // end function construct
 
     /**
@@ -1028,6 +1037,120 @@ class GM_WooCommerce {
     // public function gm_add_quote_continue_shopping_button_action() {
     //     echo $this->gm_add_continue_shopping_button();
     // }
+
+    /**
+     * SINGLE PRODUCT TEMPLATE OPTIONS
+     * All single product options should be moved under this heading
+     */
+    /**
+     * Change the tab title on the single product page
+     */
+    public function gm_change_single_product_description_tab_title() {
+        return 'More Details';
+    }
+
+    /**
+     * Move the tabs (buttons) above the request a quote button
+     */
+    public function gm_change_single_product_layout() {
+        remove_action('woocommerce_single_product_summary', 'woocommerce_output_product_data_tabs', 60);
+
+        global $product;
+        if ( $product->is_type( 'variable' ) ) {
+            add_action('woocommerce_after_single_variation', 'woocommerce_output_product_data_tabs', 10);
+
+        } else {
+            // add_action( 'woocommerce_after_add_to_cart_button', array( $this, 'add_button_single_page' ), 15 );
+            add_action('woocommerce_after_add_to_cart_button', 'woocommerce_output_product_data_tabs', 10);
+        }
+
+        // remove the additional information tab
+        add_filter('woocommerce_product_tabs', array($this, 'gm_woocommerce_product_tabs'), 10);
+
+        // add to the description tab
+        add_filter( 'the_content', array($this, 'gm_add_additional_information_to_description_tab') );
+
+    }
+
+    /**
+     * Remove the additional information tab/button
+     */
+    public function gm_woocommerce_product_tabs($tabs){
+        
+        // if only the additional_information tab exists, set 
+        // the description tab array so we can show the info there
+        if(!array_key_exists('description', $tabs) && array_key_exists('additional_information', $tabs)) {
+            $tabs['description'] = array(
+                'title' => 'Description',
+                'priority' => 10,
+                'callback' => 'woocommerce_product_description_tab'
+            );
+        }
+
+        unset( $tabs['additional_information'] ); 
+        return $tabs;
+    }
+    /**
+     * Add the information that is usually under Additional Information to
+     * the Description tab
+     */
+    public function gm_add_additional_information_to_description_tab($content) {
+        if(is_product()) {
+            global $product;
+            ob_start();
+            $product->list_attributes();
+            $product_attributes = ob_get_clean();
+            if($product_attributes != '') {
+
+                if(strip_tags($content) == '') {
+                    $content = $content  . $product_attributes;
+
+                } else {
+                    $content = $content . '<h4 class="additional-information">Additional Information</h4>' . $product_attributes;
+
+                }
+            }
+        }
+        return $content;
+    }
+    /**
+     * Ajax to see if a product is a quick gyro stabilizer
+     */
+
+    public function gm_check_is_quick_gyro_stabilizer() {
+        $nonce_check = check_ajax_referer( 'gm_params_nonce', 'nonce' );
+        $return_arr = array();
+
+        if(isset($_POST['prod_id']) && is_numeric($_POST['prod_id'])) {
+            $product_id = $_POST['prod_id'];
+        } else {
+            $return_arr['is_qgs'] = 'false';
+            $return_arr['status'] = 'Product ID not provided or not a number.';
+            wp_send_json($return_arr);
+        }
+
+        $category_terms = get_the_terms( $product_id, 'product_cat' );
+        foreach( $category_terms as $category_term ) {
+            $product_categories[] = $category_term->slug;
+        }
+        if(in_array('quick-gyro-stabilizers', $product_categories)) {
+            $return_arr['is_qgs'] = 'true';
+            $return_arr['status'] = 'Product is a Quick Gyro Stabilizer.';
+        } else {
+            $return_arr['is_qgs'] = 'false';
+            $return_arr['status'] = 'Product is not a Quick Gyro Stabilizer.';
+        }
+
+        wp_send_json($return_arr);
+
+
+        // $cart = WC()->cart->cart_contents;
+        // foreach( $cart as $cart_item_id=>$cart_item ) {
+        // $cart_item['new_meta_data'] = 'Your stuff goes here';
+        // WC()->cart->cart_contents[$cart_item_id] = $cart_item;
+        // }
+        // WC()->cart->set_session();
+    }
     /**
     * Logging function to debug.log
     */

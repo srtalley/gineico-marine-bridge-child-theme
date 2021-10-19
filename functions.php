@@ -11,7 +11,11 @@ if(!function_exists('bridge_qode_child_theme_enqueue_scripts')) {
 		// wp_enqueue_style('bridge-childstyle');
 		wp_enqueue_style( 'bridge-childstyle', get_stylesheet_directory_uri() . '/style.css', '', wp_get_theme()->get('Version'), 'all' );
 
-		wp_enqueue_script( 'main', get_stylesheet_directory_uri() . '/main.js', '', '1.2.3', true );
+		wp_enqueue_script( 'gm-main', get_stylesheet_directory_uri() . '/main.js', '', '2.5.4', true );
+		wp_localize_script( 'gm-main', 'params', array(
+			'ajaxurl'   => admin_url( 'admin-ajax.php' ),
+			'ajaxnonce' => wp_create_nonce( 'gm_params_nonce' )
+		  ) );
 	}
 
 	add_action('wp_enqueue_scripts', 'bridge_qode_child_theme_enqueue_scripts', 11);

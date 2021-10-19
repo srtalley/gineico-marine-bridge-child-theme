@@ -59,7 +59,7 @@ if ( $order->get_status() === 'trash' ) {
 $show_price        = ! ( get_option( 'ywraq_hide_price' ) === 'yes' && $order->get_status() === 'ywraq-new' );
 $show_total_column = ! ( get_option( 'ywraq_hide_total_column', 'yes' ) === 'yes' && $order->get_status() === 'ywraq-new' );
 
-// BEGIN GM CUSTOm
+// BEGIN GM CUSTOM
 if($order->get_status() == 'ywraq-new') {
 	$show_price        = false;
 	$show_total_column = false;

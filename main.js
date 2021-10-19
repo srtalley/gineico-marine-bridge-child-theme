@@ -1,4 +1,4 @@
-//version: 1.2.3
+//version: 2.5.4
 jQuery(function($) {
     $(document).ready(function() {
 
@@ -102,6 +102,50 @@ jQuery(function($) {
             $('#billing_country_field span.select2-selection__placeholder').text('Country');
             $('#shipping_country_field span.select2-selection__placeholder').text('Country');
         }
+
+
+        /**
+         * Listen for the add to quote trigger and redirect to the request a quote page
+         */
+
+         $(document).bind( 'yith_wwraq_added_successfully', function(event, response, prod_id){
+
+          $.ajax({
+              type: 'POST',
+              dataType: 'json',
+              url: params.ajaxurl,
+              data: {
+                  'action': 'gm_check_is_quick_gyro_stabilizer',
+                  'prod_id': prod_id,
+                  'nonce': params.ajaxnonce,
+              },
+              success: function(data) {
+                  console.log(data);
+                  if(data.is_qgs == 'true') {
+                    // append a div for the spinner
+                    $('body').append('<div id="gm-add-to-quote-overlay" style="display: none;"></div>');
+                    // show the spinner
+                    $.blockUI({
+                        message: $('#gm-add-to-quote-overlay'),
+                        css: {
+                            backgroundColor: 'transparent',
+                            border: '0'
+                        }
+                    }); 
+                    // redirect to the quote page
+                    window.location.href = 'https://' + window.location.hostname + '/request-quote/';
+                } 
+
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR + ' :: ' + textStatus + ' :: ' + errorThrown);
+  
+              }
+          });
+
+  
+        });
+
     });
 
 
