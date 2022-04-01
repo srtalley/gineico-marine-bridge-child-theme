@@ -32,7 +32,9 @@ class GM_TradeCustomer {
         add_filter( 'new_user_approve_default_status', array($this,'gm_trade_customer_new_user_approval'), 10, 2);
 
         // remove the new user approve message on the login page
-        remove_filter( 'login_message', array( \pw_new_user_approve::instance(), 'welcome_user' ) );
+        if(class_exists('pw_new_user_approve')) {
+            remove_filter( 'login_message', array( \pw_new_user_approve::instance(), 'welcome_user' ) );
+        }
 
         // change the admin email
         add_filter('new_user_approve_request_approval_message', array($this, 'gm_trade_customer_new_user_approve_admin_email'), 10, 3 );
@@ -695,7 +697,9 @@ class GM_TradeCustomer {
      * Stop the New User Approve plugin from sending an email when a user is denied.
      */
     public function gm_trade_customer_disable_deny_user_email() { //removing actions of yith plugin
-        remove_action( 'new_user_approve_deny_user', array( pw_new_user_approve(), 'deny_user' ) );
+        if(function_exists('pw_new_user_approve')) {
+            remove_action( 'new_user_approve_deny_user', array( pw_new_user_approve(), 'deny_user' ) );
+        }
     }
     
     /**

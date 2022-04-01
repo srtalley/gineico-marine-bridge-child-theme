@@ -1,8 +1,9 @@
 <?php 
 if(!function_exists('bridge_qode_child_custom_breadcrumbs')) {
 	function bridge_qode_child_custom_breadcrumbs() {
-
+		
 		global $post;
+
 		global $taxonomy, $term;
 		$homeLink = esc_url(home_url('/'));
 		$blogTitle = get_option('blogname');
@@ -67,7 +68,6 @@ if(!function_exists('bridge_qode_child_custom_breadcrumbs')) {
 					$post_type = get_post_type_object(get_post_type());
 					$shop_page = get_option('woocommerce_shop_page_id');
 					$cat = get_the_category();
-wl($cat);
 					if (!empty($shop_page)) {
 						echo '<a' . $bread_style . ' href="' . get_permalink($shop_page) . '">' . get_the_title($shop_page) . '</a>' . $delimiter;
 					}

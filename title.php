@@ -656,15 +656,34 @@ if(!bridge_qode_is_title_hidden()) { ?>
 	</div>
 <?php } 
 
-if(!is_front_page()) { ?>
+if(!is_front_page()) {
+	
+// see if an option is set to hide the breadcrumbs
 
-<div class="container"><div class="qode-child-breadcrumb breadcrumb container_inner" <?php print $bridge_qode_page_title_breadcrumbs_animation_data; ?>>
+if($post->ID != '') {
+	$hide_breadcrumbs = get_field('hide_breadcrumbs', $post->ID);
+}
+?>
+
+<div class="container"><div class="qode-child-breadcrumb-wrapper">
 <?php
 	if(class_exists('WooCommerce') && (is_shop() || is_product() || is_product_category())) {
-			woocommerce_breadcrumb();
+			?>
+			<div class="qode-child-breadcrumb breadcrumb container_inner" <?php print $bridge_qode_page_title_breadcrumbs_animation_data; ?>>
+				<?php woocommerce_breadcrumb(); ?>
+			</div>
+			<?php
 	} else {
-		if (function_exists('bridge_qode_child_custom_breadcrumbs') && $bridge_qode_enable_breadcrumbs == "yes") {
-			bridge_qode_child_custom_breadcrumbs();
+		if (function_exists('bridge_qode_child_custom_breadcrumbs') && $bridge_qode_enable_breadcrumbs == "yes" && !$hide_breadcrumbs) {
+			?>
+			<div class="qode-child-breadcrumb breadcrumb container_inner" <?php print $bridge_qode_page_title_breadcrumbs_animation_data; ?>>
+				<?php bridge_qode_child_custom_breadcrumbs(); ?>
+			</div>
+			<?php
+		} else {
+			?>
+			<div class="qode-child-breadcrumb hide_breadcrumb"></div>
+			<?php
 		}
 	}
 ?>

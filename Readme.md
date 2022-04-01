@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [2.6.5] - 2022-03-20
+* Changed to local fonts.
+
 ## [2.5.4] - 2021-08-15
 * Made the shop page categories so they can take up to two lines wihtout messing up the button layout.
 * Added AJAX to check if a product is a Quick Gyro Stabilizer when clicking the Request a Quote button.

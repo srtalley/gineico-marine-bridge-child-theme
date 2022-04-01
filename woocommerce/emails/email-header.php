@@ -155,7 +155,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 															<td class="nav-text-block " style="font-family: Arial, sans-serif; line-height: 1.3em; height: 38px; font-size: 14px; padding: 8px 12px;">
 																<a href="https://www.gineicomarine.com.au/contact-us/" style="color: #232323; font-style: none; text-decoration: none;"> Contact Us </a> 
 															</td>
-															<td class="nav-spacer-block" style="font-family: Arial, sans-serif; line-height: 1.3em; height: 38px; font-size: 14px; padding: 8px 6px;">&nbsp;
+															<td class="nav-image-block" style="text-align: center; padding: 8px 12px;">
+																<a href="https://www.facebook.com/gineicomarine/" style="font-style: none; text-decoration: none;" target="_blank"> <img width="20" height="20" style="margin-right: 0;" src="<?php echo site_url(); ?>/wp-content/themes/bridge-child/images/social-thumb-facebook.png" title="Facebook"> </a> 
+															</td>
+															<td class="nav-image-block" style="text-align: center; padding: 8px 12px;">
+																<a href="https://www.instagram.com/gineico_marine/" style="font-style: none; text-decoration: none;" target="_blank"> <img width="20" height="20" style="margin-right: 0;" src="<?php echo site_url(); ?>/wp-content/themes/bridge-child/images/social-thumb-instagram.png" title="Instagram"> </a> 
+															</td>
+															<td class="nav-image-block" style="text-align: center; padding: 8px 12px;">
+																<a href="https://www.youtube.com/channel/UCoGkOukwxPVN0ENO_7ly4uA/" style="font-style: none; text-decoration: none;" target="_blank"> <img width="20" height="20" style="margin-right: 0;" src="<?php echo site_url(); ?>/wp-content/themes/bridge-child/images/social-thumb-youtube.png" title="YouTube"> </a> 
+															</td>
+															<td class="nav-image-block" style="text-align: center; padding: 8px 12px;">
+																<a href="https://www.linkedin.com/company/gineico-marine/" style="font-style: none; text-decoration: none;" target="_blank"> <img width="20" height="20" style="margin-right: 0;" src="<?php echo site_url(); ?>/wp-content/themes/bridge-child/images/social-thumb-linkedin.png" title="LinkedIn"> </a> 
+															</td>
+															<td class="nav-spacer-block" style="font-family: Arial, sans-serif; line-height: 1.3em; height: 38px; font-size: 14px; padding: 8px 12px;">&nbsp;
 															</td>
 														</tr>
 													</tbody>
