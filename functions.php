@@ -27,7 +27,9 @@ require_once( dirname( __FILE__ ) . '/includes/class-posts.php');
 require_once( dirname( __FILE__ ) . '/includes/class-woocommerce.php');
 require_once( dirname( __FILE__ ) . '/includes/class-trade_customer.php');
 require_once( dirname( __FILE__ ) . '/includes/class-woocommerce-account.php');
+require_once( dirname( __FILE__ ) . '/includes/class-woocommerce-product.php');
 require_once( dirname( __FILE__ ) . '/includes/class-woocommerce-shipping.php');
+require_once( dirname( __FILE__ ) . '/includes/class-wp-forms.php');
 
 // wl(pw_new_user_approve)
 
@@ -231,3 +233,15 @@ function gm_ajax_variation_threshold( $default, $product ) {
  * Show the thumbnail always on quotes
  */
 add_filter('ywraq_item_thumbnail', '__return_true', 100);
+/**
+ * Return the abbreviation for this site
+ */
+function get_gineico_site_abbreviation() {
+	if(site_url() == "https://www.gineicolighting.com.au" || site_url() == "https://gineicolighting.client.dustysun.com") {
+		return 'GL';
+	}  if(site_url() == "https://www.gineicomarine.com.au" || site_url() == "https://gineicomarine.dev.dustysun.com") {
+		return 'GM';
+	} else {
+		return false;
+	}
+}

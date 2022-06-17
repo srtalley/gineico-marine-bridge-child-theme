@@ -4,8 +4,8 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.6.5b
-Revised: 2022-03-20
+Version: 2.6.6
+Revised: 2022-06-17
 Template: bridge
 */
 
@@ -869,8 +869,8 @@ button.single_add_to_cart_button.button {
 
 .quantity.buttons_added input[type="button"] {
     background-color: #fff;
-    border: 2px solid #e2ad68;
-    color: #e2ad68;
+    border: 2px solid #81d8d0;
+    color: #8ed1fc;
     font-weight: bold;
 }
 
@@ -1125,7 +1125,7 @@ span.woocommerce-Price-amount.amount:nth-last-child(2) span.currency-suffix {
 
 .product-catalogue-link a {
     font-weight: 700;
-    color: #e2ad69;
+    color: #7ac5c8;
     font-size: 18px;
     text-transform: uppercase;
 }
@@ -1576,30 +1576,51 @@ body.woocommerce-js .yith_ywraq_add_item_browse_message a:hover,
     margin-bottom: 10px;
 }
 
-#yith-ywraq-default-form {
+.yith-request-a-quote-page .request-quote-column * {
+    box-sizing: border-box;
+}
+.yith-request-a-quote-page .request-quote-column {
+    /* width: 100%; */
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     margin: 0 -10px;
 }
-
-#yith-ywraq-default-form * {
-    box-sizing: border-box;
+.yith-request-a-quote-page #yith-ywraq-default-form .request-quote-column .form-row,
+.yith-request-a-quote-page #yith-ywraq-default-form .request-quote-column .form-row.form-row-wide {
+    flex: 1 1 40%;
+    min-width: 300px;
+    padding: 0 10px;
 }
-
-#yith-ywraq-default-form .form-row {
-    flex: 1 1 45%;
-    margin: 5px 10px;
+.yith-request-a-quote-page #yith-ywraq-default-form .request-quote-column .form-row .optional {
+    display: none;
 }
-
+.yith-request-a-quote-page .request-quote-column .form-row input,
+.yith-request-a-quote-page .request-quote-column .form-row textarea {
+    width: 100%;
+}
+.request-quote-column p.form-row {
+	position: relative;
+}
+.request-quote-column textarea {
+	height: 100px;
+}
+.request-quote-column .ywraq_error {
+    position: absolute;
+    width: 100%;
+    left: 10px;
+    bottom: -26px;
+}
+#yith-ywraq-default-form .form-row.form-row-wide {
+    padding-left: 0;
+    padding-right: 0;
+}
 #yith-ywraq-default-form .form-row .woocommerce-input-wrapper {
     width: 100%;
 }
-
 #yith-ywraq-default-form .form-row .woocommerce-input-wrapper input {
     width: 100%;
 }
-
 #yith-ywraq-default-form .form-row .woocommerce-input-wrapper input[type="tel"] {
     border: 1px solid #b7b7b7;
     padding: 15px 13px;
@@ -1611,7 +1632,6 @@ body.woocommerce-js .yith_ywraq_add_item_browse_message a:hover,
     font-family: 'Raleway', sans-serif;
     font-weight: 400;
 }
-
 #yith-ywraq-default-form #message_field {
     flex-basis: 100%;
 }
@@ -1629,7 +1649,7 @@ body.woocommerce-js .yith_ywraq_add_item_browse_message a:hover,
     width: 100%;
     text-align: center;
     box-sizing: border-box;
-    background-color: #e2ad69 !important;
+    background-color: #7ac5c8 !important;
     font-weight: 700;
     line-height: 56px;
     font-size: 13px;

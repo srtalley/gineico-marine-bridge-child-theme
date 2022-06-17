@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [2.6.6] - 2022-06-17
+* Removed certain templates and functions related to YITH Request a Quote so they could be added to the Gineico Quoting System plugin.
+
 ## [2.6.5] - 2022-03-20
 * Changed to local fonts.
 

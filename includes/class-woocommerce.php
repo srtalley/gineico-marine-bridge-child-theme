@@ -38,9 +38,12 @@ class GM_WooCommerce {
         add_action( 'woocommerce_cart_totals_before_order_total', array($this, 'gm_add_currency_suffix_for_total_action') );        
         add_action( 'woocommerce_review_order_before_order_total', array($this, 'gm_add_currency_suffix_for_total_action') );
 
-        add_filter( 'woocommerce_cart_item_subtotal', array($this, 'gm_subtotal_suffix') );
+        // add_filter( 'woocommerce_cart_item_subtotal', array($this, 'gm_subtotal_suffix') );
+        
         // add ex. GST to the subtotal in the cart
-        add_filter( 'woocommerce_cart_subtotal', array($this, 'gm_subtotal_suffix'));
+        // add_filter( 'woocommerce_cart_subtotal', array($this, 'gm_subtotal_suffix'));
+
+        add_filter( 'woocommerce_get_order_item_totals', array($this, 'add_gst_to_order_item_totals'), 10, 3 );
 
         // change the tax label in the cart/checkout
         add_filter( 'woocommerce_countries_tax_or_vat', array($this,  'gm_change_email_tax_label') );
@@ -129,26 +132,6 @@ class GM_WooCommerce {
         // Set the default country at checkout
         add_filter( 'default_checkout_billing_country', array($this, 'gm_change_default_checkout_country') );
 
-        // PDF file name
-        add_filter( 'ywraq_pdf_file_name', array($this, 'gm_ywraq_pdf_file_name'), 10, 2 );
-        
-        // PDF file url
-        add_filter('ywraq_pdf_file_url', array($this, 'gm_ywraq_pdf_url_string'), 10, 1);
-
-        // PDF paper orientation
-        add_filter('ywraq_change_paper_orientation' , array($this, 'gm_ywraq_change_paper_orientation'));
-
-        // Set an auto generated quote back to the "New" status
-        // add_action( 'ywraq_after_create_order', array( $this, 'gm_reset_auto_generated_quote_order_status' ), 20, 2 );
-
-        // Add the terms at the bottom of the PDF quote
-        add_action( 'yith_ywraq_quote_template_after_content', array($this, 'gm_quote_terms'));
-
-        // Check for YITH emails and add the terms to the bottom
-        add_action ( 'woocommerce_email_footer', array($this, 'gm_woocommerce_email_footer'), 10, 1);
-
-        // Change the YITH Send Your Request button text
-        add_filter('ywraq_form_defaul_submit_label', array($this, 'gm_ywraq_form_defaul_submit_label'));
         // Change the hide quote button text in the admin area
         // add_filter( 'gettext', array($this,'gm_yith_change_text'), 20, 3 );
         /**
@@ -470,9 +453,11 @@ class GM_WooCommerce {
         global $product;
         if($product->get_type() == 'variable') {
             // check if the product is in the exclusion list
-            $is_excluded_from_quote = ywraq_is_in_exclusion($product->get_id());
-            if(!$is_excluded_from_quote) {
-                echo '<a href="' . get_permalink( $product->get_id() ) . '" class="add-request-quote-button-variable button">Request a Quote</a>';
+            if(function_exists('ywraq_is_in_exclusion')) {
+                $is_excluded_from_quote = ywraq_is_in_exclusion($product->get_id());
+                if(!$is_excluded_from_quote) {
+                    echo '<a href="' . get_permalink( $product->get_id() ) . '" class="add-request-quote-button-variable button">Request a Quote</a>';
+                }
             }
         }
     }
@@ -522,9 +507,19 @@ class GM_WooCommerce {
     /**
      * add ex. GST to the cart/checkout product subtotal and overall subtotal
      */
-    public function gm_subtotal_suffix($html) {
-        $currency = '<span class="currency-suffix"> ex. GST</span>';
-        return $html . $currency;
+    // public function gm_subtotal_suffix($html) {
+    //     $currency = '<span class="currency-suffix"> ex. GST</span>';
+    //     return $html . $currency;
+    // }
+
+    /**
+     * Add ex GST to subtotals
+     */
+     public function add_gst_to_order_item_totals($total_rows, $obj, $tax_display) {
+        if(isset($total_rows['order_total'])) {
+            $total_rows['order_total']['label'] = __( 'Total Ex GST:', 'woocommerce' );
+        }
+        return $total_rows;
     }
     /**
      * Change the tax label in the cart and in checkout
@@ -834,87 +829,9 @@ class GM_WooCommerce {
         do_action( 'woocommerce_proceed_to_checkout' );
     }
 
-    /**
-     * Change the Yith PDF file name
-     */
-    public function gm_ywraq_pdf_file_name($pdf_file_name, $order_id) {
-        $order = wc_get_order($order_id);
-        $customer_firstname = yit_get_prop( $order, '_billing_first_name', true );
-        $customer_lastname  = yit_get_prop( $order, '_billing_last_name', true );
-        
-        $user_name_concatenated = $customer_firstname . '_' . $customer_lastname;
-
-		if($customer_lastname == null || $customer_lastname == '') {
-            $user_name = yit_get_prop( $order, 'ywraq_customer_name', true );
-            $user_name_parts = explode(" ", $user_name);
-            $user_name_concatenated = implode("_", $user_name_parts);
-		}
-
-        $order_date = yit_get_prop($order, 'date_created', true);
-		$order_date = substr($order_date, 0, 10);
-		$order_date = str_replace('-', '_', $order_date);
-        $pdf_file_name = sanitize_file_name('Gineico Marine Quote-' . $user_name_concatenated . '-' . $order_date . '-' . $order_id . '.pdf');
-        
-        return $pdf_file_name;
-    }
-
-    /** 
-     * Add a random string to the end of the URL to break the cache so that the 
-     * proper PDF downloads.
-     */
-    public function gm_ywraq_pdf_url_string($url) {
-
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyz'; 
-        $randomString = ''; 
+  
     
-        for ($i = 0; $i < 6; $i++) { 
-            $index = rand(0, strlen($characters) - 1); 
-            $random_string .= $characters[$index]; 
-        } 
-        return $url . '?ver=' .$random_string;
-    }
-    /** 
-     * Change the PDF paper orientation
-     */
-    public function gm_ywraq_change_paper_orientation($orientation) {
-		return 'landscape';
-    }
     
-    public function gm_quote_terms($order_id = null) {
-		?>
-		<p style="margin-top: 0; font-style: italic; font-size: 12px;">
-            PLEASE TAKE NOTE OF ALL THE CONDITIONS OF THIS QUOTE AS STATED BELOW, BEFORE PLACING AN ORDER
-			<ol>
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Until fully Paid, goods remain the sole property of Gineico Queensland Pty Ltd.</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Unless otherwise specified, indicated costs are unit costs.</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Prices are quoted in Australian Dollars not including G.S.T</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Prices are quoted for goods ex our store. Delivery charges will apply if goods are required to be on-forwarded.</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Unless otherwise stated, lead time is approximately 8-10 weeks from confirmation of order (not including holiday closures). Faster air freight delivery can be requested.</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Terms of sale: 50% deposit with written order. Balance in full prior to consignment.</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Balance of payment and collection of goods, to take place within 7 calendar days from date when goods become available. </li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Failure to pay and collect goods by the stated time may incur storage costs or the forfeit of the deposit and goods.</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Payments made by cheque, credit card or telegraphic transfer, will be subject to clearance of funds (in our account), prior to goods being released. </li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">This offer is valid for 30 calendar days from this date.</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Reduction of the indicated quantity will be cause for revision of quoted prices.</li>
-
-				<li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Restocking fee of 50% applies to all items returned and can only be accepted with a prior written consent by gineico QLD p/l. Goods returned at client's expense.</li>
-
-                <li style="font-style: italic; margin-bottom: 5px; font-size: 12px; color: #232323 !important">Custom or non standard stock hardware cannot be returned.</li>
-
-			</ol>
-		</p>
-		<?php
-	}
 
     /**
      * Add a banner to product thumbs
@@ -934,22 +851,7 @@ class GM_WooCommerce {
     }
       
 
-    /**
-     * Check for YITH Request a Quote emails and call the function to add the 
-     * terms for the footer
-     */
-    public function gm_woocommerce_email_footer($email) {
-        switch ($email->id) {
-            case 'ywraq_email':
-            case 'ywraq_email_customer':
-            case 'yith_ywraq_quote_status':
-            case 'yith_ywraq_send_quote':
-            case 'yith_ywraq_send_email_request_quote_customer':
-                $this->gm_quote_terms();
-                
-            break;
-        }
-    } // end gm_woocommerce_email_footer
+
    
     /**
      * Change the hide quote button text in the admin area
@@ -976,31 +878,12 @@ class GM_WooCommerce {
     }
 
     /**
-     * Change the default Send Your Request button text
-     */
-    public function gm_ywraq_form_defaul_submit_label() {
-        return 'Send Quote Request';
-    }
-
-    /**
      * Remove Product structured data
      */
     public function gm_remove_product_structured_data( $markup ) {
         return '';
     }
 
-    /** 
-     * Set the quotes back to new status after auto generating email
-     */
-    // public function gm_reset_auto_generated_quote_order_status( $raq, $order ) {
-    //     if ( current_action() === 'ywraq_after_create_order' ) {
-    //         $order = wc_get_order( $raq );
-    //         if(!empty($order) && $order != null) {
-    //             $order->update_status( 'ywraq-new' );
-
-    //         }
-    //     }
-    // }
     /**
      * Set up where the Continue Shopping button should appear after the add to quote
      * button.
