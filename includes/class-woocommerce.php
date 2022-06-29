@@ -515,11 +515,22 @@ class GM_WooCommerce {
     /**
      * Add ex GST to subtotals
      */
-     public function add_gst_to_order_item_totals($total_rows, $obj, $tax_display) {
-        if(isset($total_rows['order_total'])) {
-            $total_rows['order_total']['label'] = __( 'Total Ex GST:', 'woocommerce' );
+     public function add_gst_to_order_item_totals($total_rows, $order, $tax_display) {
+
+        $new_total_rows = array();
+        // if(isset($total_rows['order_total_ex_gst'])) {
+        foreach ( $total_rows as $key => $total_row ) { 
+            if($key == 'payment_method') {
+                $new_total_rows['order_total_ex_gst'] = array(
+                    'label' => __( 'Total Ex GST:', 'woocommerce' ),
+                    'value' =>  $order->get_total() - $order->get_total_tax()
+                );
+            }
+            $new_total_rows[$key] = $total_row;
+
         }
-        return $total_rows;
+        // }
+        return $new_total_rows;
     }
     /**
      * Change the tax label in the cart and in checkout

@@ -1,6 +1,10 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
+## [2.6.7] - 2022-06-29
+* Updated the Total Ex GST lines on the order for regular purchases.
+
 ## [2.6.6] - 2022-06-17
 * Removed certain templates and functions related to YITH Request a Quote so they could be added to the Gineico Quoting System plugin.
 
