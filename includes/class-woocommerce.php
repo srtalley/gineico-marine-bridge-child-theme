@@ -712,7 +712,7 @@ class GM_WooCommerce {
 
             if($product->get_price() == '0' || $hide_price) {
                 // add_action('wp_footer', array($this,'gm_hide_variation_price_css'));
-                return '<div class="hide-price">&nbsp;</div>';
+                return '<div class="hide-price"></div>';
             } 
         }
         
@@ -777,10 +777,10 @@ class GM_WooCommerce {
         // if($product->managing_stock() && $product->is_in_stock()) {
             // $availability = 'In Stock';    
         // } else {
-            $availability_backorder = $this->starts_with($availability, 'Available on backorder');
+            $availability_backorder = $this->starts_with($availability, 'Available on back-order');
             if($availability_backorder) {
     
-                $availability = str_replace('Available on backorder', '', $availability);
+                $availability = str_replace('Available on back-order', '', $availability);
                 $availability = str_replace('class="wclt_lead_time">&nbsp;| ', 'class="wclt_lead_time">', $availability);
             }
             //     // Available on backorder<span style="color: #1c1d20;" class="wclt_lead_time">&nbsp;| LEAD TIME: 8 - 10 weeks
@@ -1000,7 +1000,7 @@ class GM_WooCommerce {
                     $content = $content  . $product_attributes;
 
                 } else {
-                    $content = $content . '<h4 class="additional-information">Additional Information</h4>' . $product_attributes;
+                    $content = $content . '<h4 class="additional-information">ADDITIONAL INFORMATION &mdash; SHIPPING</h4>' . $product_attributes;
 
                 }
             }

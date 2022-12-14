@@ -4,8 +4,8 @@ Theme URI: http://demo.qodeinteractive.com/bridge/
 Description: A child theme of Bridge Theme for Gineico Marine
 Author: Qode Interactive
 Author URI: http://www.qodethemes.com/
-Version: 2.6.7
-Revised: 2022-06-29
+Version: 2.7.0
+Revised: 2022-10-24
 Template: bridge
 */
 
@@ -677,6 +677,7 @@ input.wpcf7-form-control.wpcf7-submit:not([disabled]),
     font-size: 14px;
     vertical-align: middle;
     line-height: 1.2em;
+    width: 90px;
 }
 
 .variations_form.cart table.variations .value {
@@ -692,6 +693,10 @@ input.wpcf7-form-control.wpcf7-submit:not([disabled]),
     flex-wrap: wrap;
     align-items: center;
     padding-left: 100px;
+}
+
+.product.onbackorder .variations_form.cart .woocommerce-variation.single_variation {
+    margin-bottom: 0;
 }
 
 .variations_form.cart .woocommerce-variation-description {
@@ -779,7 +784,7 @@ input.wpcf7-form-control.wpcf7-submit:not([disabled]),
     background-repeat: no-repeat;
     /* background-position: calc(100% - 25px) calc(1em + 2px), calc(100% - 20px) calc(1em + 2px), calc(100% - 2.5em) 0.5em; */
     background-position: calc(100% - 17px) calc(1em + 2px), calc(100% - 12px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-    margin-bottom: 10px;
+    margin-bottom: 0;
 }
 
 
@@ -1164,7 +1169,7 @@ span.woocommerce-Price-amount.amount:nth-last-child(2) span.currency-suffix {
 }
 
 .cart-collaterals>.woocommerce-shipping-calculator {
-    display: none;
+    /* display: none; */
 }
 
 .woocommerce-cart div.cart-collaterals #wc-stripe-payment-request-wrapper,
@@ -1225,12 +1230,28 @@ span.woocommerce-Price-amount.amount:nth-last-child(2) span.currency-suffix {
     text-transform: none;
     color: #888;
 }
-
-.woocommerce div.cart-collaterals .woocommerce-shipping-calculator {
-    float: none;
-    width: 100%;
-    margin-bottom: 0;
+@media (min-width: 769px) {
+    .woocommerce div.cart-collaterals .shipping-calculator-form {
+        padding-right: 40px;
+    }
 }
+@media (max-width: 768px) {
+    .woocommerce div.cart-collaterals {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .woocommerce div.cart-collaterals .cart_totals {
+        order: 2;
+    }
+    .woocommerce div.cart-collaterals .woocommerce-shipping-calculator {
+        float: none;
+        width: 100%;
+        order: 1;
+        margin: 30px 0 10px;
+    }
+}
+
 
 .woocommerce div.cart-collaterals .woocommerce-shipping-calculator p button {
     width: 100%;

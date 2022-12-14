@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.7.0] - 2022-10-24
+* Styling changes.
+
+## [2.6.9] - 2022-10-04
+* Fixed issue with anchor scrolling code.
+
+## [2.6.8] - 2022-09-25
+* Updated the back order text.
+
 ## [2.6.7] - 2022-06-29
 * Updated the Total Ex GST lines on the order for regular purchases.
 

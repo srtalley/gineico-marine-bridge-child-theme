@@ -661,7 +661,9 @@ if(!is_front_page()) {
 // see if an option is set to hide the breadcrumbs
 
 if($post->ID != '') {
-	$hide_breadcrumbs = get_field('hide_breadcrumbs', $post->ID);
+	if(function_exists('get_field')) {
+		$hide_breadcrumbs = get_field('hide_breadcrumbs', $post->ID);
+	}
 }
 ?>
 

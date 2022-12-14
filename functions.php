@@ -48,6 +48,7 @@ add_filter( 'ninja_forms_submission_pdf_name', 'custom_pdf_name', 20, 2 );
 * Logging function to debug.log
 */
 function wl ( $log )  {
+	echo ini_get('error_log');
     if ( is_array( $log ) || is_object( $log ) ) {
         error_log( print_r( $log, true ) );
     } else {
@@ -245,3 +246,19 @@ function get_gineico_site_abbreviation() {
 		return false;
 	}
 }
+// wl('chom');
+// add_action('after_setup_theme', 'melissasachs');
+
+// function melissasachs() {
+// 	wl('init this bitch');
+// 	add_filter('ppress_should_start_session', 'melissa', 99999);
+
+// }
+// // add_filter('ppress_should_start_session', '__return_false', 99999);
+// // add_filter('ppress_should_start_session', 'melissa', 99999);
+// function melissa() {
+// 	wl('we calling and returnning');
+// 	return false;
+// }
+
+add_filter('wpdm_user_accept_cookies', '__return_false', 99999);

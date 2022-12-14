@@ -1,4 +1,4 @@
-//version: 2.5.4
+//version: 2.6.9
 jQuery(function($) {
     $(document).ready(function() {
 
@@ -49,7 +49,11 @@ jQuery(function($) {
                     var top_banner_height = $('.mtsnb-container-outer').first().height();
                     var main_header_height = $('header.centered_logo.page_header').first().height();
                     var admin_bar_height = $('#wpadminbar').height();
-                    var offset_amount = top_banner_height + main_header_height + admin_bar_height;
+                    var offset_amount = top_banner_height + main_header_height;
+                    if($('#wpadminbar').length) {
+                        var admin_bar_height = $('#wpadminbar').height();
+                        offset_amount = offset_amount + admin_bar_height;
+                    }
                 }
                 $('html,body').animate({ scrollTop: ($(anchor).offset().top - offset_amount) + 'px' }, 1000);
             }
